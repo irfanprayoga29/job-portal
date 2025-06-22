@@ -28,11 +28,12 @@
         ```
 
 ## Project Initialization
-### Cloning project from GitHub
-1. Go to your file libraries
-2. Click on the url tab
-3. type `cmd` and click Enter
-4. Run  
+### Cloning project from GitHub (Downloading the project)
+1. Go to your File Explorer
+2. Make a folder for your project / Where to save this project
+3. Click on the url tab
+4. type `cmd` and click Enter
+5. Run  
    ```
    git clone https://github.com/avidvesha/fp-job-portal
    ```
