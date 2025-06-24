@@ -1,0 +1,74 @@
+:root {
+    --primary-dark: #cf0f47;
+    --primary: #ff0b55;
+    --light-bg: #ffdede;
+    --dark-text: #000000;
+}
+
+body {
+    background-color: var(--light-bg);
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.btn-outline-primary {
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: white;
+}
+
+.register-container {
+    max-width: 700px;
+    margin: 50px auto;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
+}
+
+.form-check-input:checked {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.logo-upload-container {
+    border: 2px dashed #cf0f47;
+    border-radius: 10px;
+    padding: 2rem;
+    text-align: center;
+    background-color: rgba(255, 222, 222, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 1.5rem;
+}
+
+.logo-upload-container:hover {
+    background-color: rgba(255, 222, 222, 0.5);
+    transform: translateY(-2px);
+}
+
+.upload-icon {
+    font-size: 2.5rem;
+    color: var(--primary);
+    margin-bottom: 1rem;
+}
+
+.logo-preview {
+    max-width: 150px;
+    max-height: 150px;
+    border-radius: 8px;
+    display: none;
+    margin: 0 auto;
+}

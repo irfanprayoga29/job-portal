@@ -1,0 +1,37 @@
+:root {
+    --primary-dark: #cf0f47;
+    --primary: #ff0b55;
+    --light-bg: #ffdede;
+    --dark-text: #000000;
+}
+
+body {
+    background-color: var(--light-bg);
+}
+
+.login-container {
+    max-width: 500px;
+    margin-top: 50px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
+}
+
+.social-login .btn {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 5px;
+}
