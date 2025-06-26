@@ -20,3 +20,6 @@ Route::get('/superuser/register', function () {
 Route::get('/user/register', function () {
     return view('user/register');
 });
+Route::get('/superuser/edit-profile', function () {
+    return view('superuser/profile-edit');
+});
