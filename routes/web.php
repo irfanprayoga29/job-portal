@@ -23,3 +23,9 @@ Route::get('/user/register', function () {
 Route::get('/superuser/edit-profile-company', function () {
     return view('superuser/profile-edit');
 });
+Route::get('/user/applicant_detail_page', function () {
+    return view('user/applicant_detail_page');
+});
+Route::get('/user/applicant-employer_landing', function () {
+    return view('user/applicant-employer_landing');
+});

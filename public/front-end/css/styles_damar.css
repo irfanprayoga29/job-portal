@@ -1,0 +1,96 @@
+.navbar {
+  background-color: #ffdede;
+}
+
+.btn .btn-primary {
+  box-shadow: 0 0.5rem 1rem rgba(black, 0.15);
+}
+
+#profile-pic,
+#logo-navbar {
+  width: 40px;
+}
+
+body {
+  font-family: "Noto Sans", sans-serif;
+  font-optical-sizing: auto;
+  margin: 0;
+  padding: 0;
+  background-color: white;
+}
+header {
+  background-color: #cf0f47;
+  /* padding: 20px; */
+  text-align: center;
+}
+header h1,
+p {
+  color: white;
+}
+header nav {
+  margin-bottom: 10px;
+}
+header nav a {
+  margin: 0 15px;
+  text-decoration: none;
+  color: #000;
+  font-weight: bold;
+}
+main {
+  max-width: 900px;
+  margin: auto;
+  background: #fff;
+  padding: 30px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  color: #000;
+}
+
+main p {
+  color: black;
+}
+.section {
+  margin-bottom: 25px;
+}
+.highlight {
+  background-color: #f82c6b;
+  color: #fff;
+  padding: 3px 8px;
+  border-radius: 4px;
+  display: inline-block;
+  margin-bottom: 8px;
+}
+.info-box {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin: 20px 0;
+}
+.info-item {
+  background: #eee;
+  padding: 15px;
+  border-radius: 8px;
+  margin: 10px;
+  flex: 1 1 28%;
+  text-align: center;
+}
+.salary {
+  font-size: 1.5em;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  margin: 20px 0;
+}
+ul {
+  padding-left: 20px;
+}
+.apply-btn {
+  display: block;
+  background: #f82c6b;
+  color: white;
+  text-align: center;
+  padding: 15px;
+  text-decoration: none;
+  font-size: 1.2em;
+  margin-top: 30px;
+  border-radius: 8px;
+}
