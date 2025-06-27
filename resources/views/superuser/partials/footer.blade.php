@@ -76,7 +76,7 @@
 
         <div class="row mt-3">
             <div class="col-md-12 text-center">
-                <p class="mb-0">© 2025 Loker In</p>
+                <p class="mb-0">© 2025 Kerja In</p>
             </div>
         </div>
     </div>

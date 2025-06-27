@@ -62,7 +62,7 @@
                 <!-- Basic Information -->
                 <section id="basic-info">
                   <div class="upload-logo mb-3">
-                    <img src="../assets/stewie.jpg" alt="logo" />
+                    <img src="{{ url(path: '/front-end/img/stewie.jpg') }}" alt="logo" />
                     <div>
                       <button class="btn btn-primary-custom btn-sm">
                         UPLOAD</button
