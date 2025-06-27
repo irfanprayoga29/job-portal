@@ -20,14 +20,6 @@ Route::get('/superuser/register', function () {
 Route::get('/user/register', function () {
     return view('user/register');
 });
-Route::get('/superuser/edit-profile', function () {
+Route::get('/superuser/edit-profile-company', function () {
     return view('superuser/profile-edit');
-});
-
-Route::get('/superuser/company_open_job_form', function () {
-    return view('superuser/company_open_job_form');
-});
-
-Route::get('/user/applicant_job_search', function () {
-    return view('user/applicant_job_search');
 });
