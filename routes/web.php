@@ -23,3 +23,12 @@ Route::get('/user/register', function () {
 Route::get('/superuser/edit-profile-company', function () {
     return view('superuser/profile-edit');
 });
+
+Route::get('/user/apply', function () {
+    return view('user/aplly');
+});
+
+Route::get('/superuser/job', function () {
+    return view('superuser/job');
+});
+
