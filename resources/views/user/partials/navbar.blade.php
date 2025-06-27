@@ -26,7 +26,7 @@
     }
 </style>
 
-<nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+<nav class="navbar navbar-expand navbar-light fixed-top bg-white topbar mb-4 static-top shadow">
     <div class="container-fluid px-5">
         <a class="navbar-brand" href="#">
             <img id="logo-navbar" src="{{ url('/front-end/img/logo.png') }}" alt="" />
@@ -59,3 +59,5 @@
         </div>
     </div>
 </nav>
+
+<div class="container" style="height: 40px"></div>

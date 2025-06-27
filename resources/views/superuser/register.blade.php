@@ -19,7 +19,7 @@
     </header>
 
     <!-- Navbar -->
-    @include('user.partials.navbar')
+    @include('superuser.partials.navbar')
 
     <div class="container">
         <div class="container">

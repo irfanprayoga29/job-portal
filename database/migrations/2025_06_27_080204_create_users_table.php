@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('gender');
             $table->text('address');
 
-            $table->unsignedBigInteger('resume_id');
+            $table->unsignedBigInteger('resume_id')->nullable();
             $table->unsignedBigInteger('role_id');
 
             $table->foreign('resume_id')->references('id')->on('resumes');

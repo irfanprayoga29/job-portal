@@ -25,26 +25,35 @@
                 <p class="text-muted">Join Kerja.in to find your dream job</p>
             </div>
 
-            <form id="registerForm">
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="firstName" class="form-label">First Name</label>
-                        <input type="text" class="form-control" id="firstName" placeholder="First name" required>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="lastName" class="form-label">Last Name</label>
-                        <input type="text" class="form-control" id="lastName" placeholder="Last name" required>
-                    </div>
+            <form id="registerForm" action="{{ route('users.store') }}" enctype="multipart/form-data" method="post">
+                @csrf
+                <div class="mb-3" hidden>
+                    <label for="firstName" class="form-label">Full Name</label>
+                    <input name="role_id" value="1" type="text" class="form-control" id="firstName"
+                        placeholder="Full name" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="firstName" class="form-label">Full Name</label>
+                    <input name="full_name" type="text" class="form-control" id="firstName" placeholder="Full name"
+                        required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="firstName" class="form-label">Username</label>
+                    <input name="username" type="text" class="form-control" id="firstName" placeholder="Username"
+                        required>
                 </div>
 
                 <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+                    <input name="email" type="email" class="form-control" id="email"
+                        placeholder="Enter your email" required>
                 </div>
 
                 <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="password"
+                    <input name="password" type="password" class="form-control" id="password"
                         placeholder="Create a password (min. 8 characters)" minlength="8" required>
                     <div class="form-text">Use a mix of letters, numbers, and symbols</div>
                 </div>
@@ -56,13 +65,26 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="userType" class="form-label">I am registering as</label>
-                    <select class="form-select" id="userType" required>
-                        <option value="" selected disabled>Select user type</option>
-                        <option value="jobSeeker">Job Seeker</option>
-                        <option value="employer">Employer</option>
+                    <label for="date_of_birth" class="form-label">Date of Birth</label>
+                    <input name="date_of_birth" type="date" class="form-control" id="" required>
+                    <div class="form-text">Lahirmu kapan?</div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="gender" class="form-label">Gender</label>
+                    <select name="gender" class="form-select" id="gender" required>
+                        <option value="" selected disabled>Select your gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
                     </select>
                 </div>
+
+                <div class="mb-3">
+                    <label for="address" class="form-label">Your Address*</label>
+                    <textarea name="address" class="form-control" id="address" rows="2" placeholder="123 Example Street, Jakarta"
+                        required></textarea>
+                </div>
+
 
                 <div class="mb-4 form-check">
                     <input class="form-check-input" type="checkbox" id="terms" required>
@@ -77,7 +99,8 @@
 
             <div class="text-center mt-4">
                 <p class="text-muted">Already have an account?
-                    <a href="login.html" class="text-decoration-none fw-bold" style="color: var(--primary-dark);">Log in
+                    <a href="login.html" class="text-decoration-none fw-bold" style="color: var(--primary-dark);">Log
+                        in
                         here</a>
                 </p>
             </div>
@@ -113,7 +136,7 @@
     <!-- Bootstrap JS -->
     @include('user.partials.script')
     <!-- Custom JS -->
-    <script src="{{ url('/front-end/js/register.js') }}"></script>
+    {{-- <script src="{{ url('/front-end/js/register.js') }}"></script> --}}
 </body>
 
 </html>
