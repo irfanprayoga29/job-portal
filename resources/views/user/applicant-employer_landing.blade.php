@@ -7,28 +7,6 @@
     
     @include('user.partials.css')
     <link rel="stylesheet" href="{{ url('front-end/css/styles_damar.css')}}">
-    
-    <!-- <style>
-      .search-box {
-        max-width: 500px;
-        margin: 20px auto;
-      }
-      .search-input {
-        border-radius: 10px 0 0 10px;
-      }
-      .search-btn {
-        background-color: #f82c6b;
-        color: white;
-        border-radius: 0 10px 10px 0;
-      }
-      .section-title {
-        font-weight: bold;
-        font-size: 2rem;
-      }
-      .section-subtitle {
-        color: #666;
-      }
-    </style> -->
   </head>
   <body>
     
@@ -45,17 +23,51 @@
         Explore thousands of job opportunities from top companies
       </p>
 
-      <div class="search-box d-flex justify-content-center">
+      <form action="{{ route('jobs.index') }}" method="GET" class="search-box d-flex justify-content-center">
         <input
           type="text"
+          name="search"
           class="form-control search-input"
           placeholder="Search job titles or keywords"
+          value="{{ request('search') }}"
         />
-        <button class="btn search-btn">
+        <button type="submit" class="btn search-btn">
           <i class="bi bi-search"></i> Search
         </button>
-      </div>
+      </form>
     </main>
+
+    <!-- Recent Jobs Section -->
+    @if(isset($recentJobs) && $recentJobs->count() > 0)
+    <section class="container mb-5">
+      <h2 class="text-center mb-4">Recent Job Opportunities</h2>
+      <div class="row">
+        @foreach($recentJobs as $job)
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5 class="card-title">{{ $job->name }}</h5>
+              <p class="card-text">{{ $job->company->company_name ?? 'Unknown Company' }}</p>
+              <p class="card-text"><small class="text-muted">{{ $job->location }}</small></p>
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="badge bg-primary">{{ $job->employment_type }}</span>
+                @if($job->salary)
+                  <span class="text-success">Rp {{ number_format($job->salary, 0, ',', '.') }}/month</span>
+                @endif
+              </div>
+            </div>
+            <div class="card-footer">
+              <a href="{{ route('jobs.show', $job->id) }}" class="btn btn-outline-primary btn-sm">View Details</a>
+            </div>
+          </div>
+        </div>
+        @endforeach
+      </div>
+      <div class="text-center">
+        <a href="{{ route('jobs.index') }}" class="btn btn-primary">View All Jobs</a>
+      </div>
+    </section>
+    @endif
 
    @include('user.partials.footer')
     @include('user.partials.script')

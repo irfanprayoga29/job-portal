@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
+    
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -25,6 +25,22 @@
                 <p class="text-muted">Join Kerja.in to find your dream job</p>
             </div>
 
+            @if(session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if($errors->any())
+                <div class="alert alert-danger">
+                    <ul class="mb-0">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <form id="registerForm" action="{{ route('users.store') }}" enctype="multipart/form-data" method="post">
                 @csrf
                 <div class="mb-3" hidden>
@@ -35,19 +51,29 @@
 
                 <div class="mb-3">
                     <label for="firstName" class="form-label">Full Name</label>
-                    <input name="full_name" type="text" class="form-control" id="firstName" placeholder="Full name"
-                        required>
+                    <input name="full_name" type="text" class="form-control @error('full_name') is-invalid @enderror" 
+                           id="firstName" placeholder="Full name" value="{{ old('full_name') }}" required>
+                    @error('full_name')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="mb-3">
-                    <label for="firstName" class="form-label">Username</label>
-                    <input name="username" type="text" class="form-control" id="firstName" placeholder="Username"
-                        required>
+                    <label for="username" class="form-label">Username</label>
+                    <input name="username" type="text" class="form-control @error('username') is-invalid @enderror" 
+                           id="username" placeholder="Username" value="{{ old('username') }}" required>
+                    @error('username')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
-                    <input name="email" type="email" class="form-control" id="email"
+                    <input name="email" type="email" class="form-control @error('email') is-invalid @enderror" 
+                           id="email" placeholder="Enter your email" value="{{ old('email') }}" required>
+                    @error('email')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                         placeholder="Enter your email" required>
                 </div>
 
@@ -99,7 +125,7 @@
 
             <div class="text-center mt-4">
                 <p class="text-muted">Already have an account?
-                    <a href="login.html" class="text-decoration-none fw-bold" style="color: var(--primary-dark);">Log
+                    <a href="{{url('login')}}" class="text-decoration-none fw-bold" style="color: var(--primary-dark);">Log
                         in
                         here</a>
                 </p>

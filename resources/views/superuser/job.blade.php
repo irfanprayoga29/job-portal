@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <!-- Add Bootstrap CSS -->
-   @include('user.partials.css')
+   @include('superuser.partials.css')
     <link rel="stylesheet" href="{{ url('front-end\css\style_job.css') }}" >
   </head>
   <body>
     <!-- Navbar -->
     <header>
-      @include('user.partials.navbar')
+      @include('superuser.partials.navbar')
     </header>
 
     <!-- Add padding to content below fixed navbar -->

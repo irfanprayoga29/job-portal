@@ -40,30 +40,34 @@
                     style="top: -12px; left: 50%; transform: translateX(-50%);">or</span>
             </div>
 
-            <form>
+        @if(session('success'))
+        <p class="alert alert-success">{{ session('success') }}</p>
+        @endif
+        @if($errors->any())
+        @foreach($errors->all() as $err)
+        <p class="alert alert-danger">{{ $err }}</p>
+        @endforeach
+        @endif
+        
+            <form action="{{route('login.action')}}" method="POST">
+                @csrf
                 <div class="mb-3">
-                    <label for="email" class="form-label">Email Address</label>
-                    <input type="email" class="form-control" id="email" placeholder="Enter your email">
+                    <label for="username" class="form-label">Username</label>
+                    <input name="username" type="text" class="form-control" id="username" placeholder="Enter your username" value="{{ old('username') }}" required>
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="password" placeholder="Enter your password">
-                </div>
-                <div class="mb-3 form-check">
-                    <input type="checkbox" class="form-check-input" id="remember">
-                    <label class="form-check-label" for="remember">Remember me</label>
-                    <a href="forgot-password.html" class="float-end text-decoration-none"
-                        style="color: var(--primary);">Forgot password?</a>
+                    <input name="password" type="password" class="form-control" id="password" placeholder="Enter your password" required>
                 </div>
                 <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">Login</button>
             </form>
 
             <div class="text-center mt-4">
                 <p class="text-muted">Don't have a Kerja.in account?
-                    <a href="register.html" class="text-decoration-none fw-bold"
+                    <a href="{{ route('user.register') }}" class="text-decoration-none fw-bold"
                         style="color: var(--primary-dark);">Sign up</a>
                 </p>
-                <p class="small text-muted">For companies, <a href="register-employeer.html"
+                <p class="small text-muted">For companies, <a href="{{ route('superuser.register') }}"
                         class="text-decoration-none" style="color: var(--primary);">click here</a></p>
             </div>
         </div>

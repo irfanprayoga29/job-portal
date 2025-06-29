@@ -25,71 +25,79 @@
         <div class="container">
             <div class="register-container bg-white p-5 mx-auto">
                 <div class="text-center mb-4">
-                    <h2 class="fw-bold" style="color: var(--primary-dark);">Company Profile</h2>
-                    <p class="text-muted">Complete your company details to start posting jobs</p>
+                    <h2 class="fw-bold" style="color: var(--primary-dark);">Company Registration</h2>
+                    <p class="text-muted">Create your company account to start posting jobs</p>
                 </div>
 
-                <form id="companyRegisterForm">
-                    <!-- Company Logo Upload -->
-                    <div class="logo-upload-container" id="logoUploadArea">
-                        <input type="file" id="companyLogo" accept="image/*" class="d-none">
-                        <div id="uploadPrompt">
-                            <i class="bi bi-cloud-arrow-up upload-icon"></i>
-                            <h5 class="fw-bold">Upload Company Logo</h5>
-                            <p class="text-muted">Format: JPG, PNG (Max 2MB)</p>
-                            <button type="button" class="btn btn-sm btn-outline-primary">Choose File</button>
-                        </div>
-                        <img id="logoPreview" class="logo-preview" alt="Logo Preview">
-                    </div>
+                @if(session('success'))
+                <p class="alert alert-success">{{ session('success') }}</p>
+                @endif
+                @if($errors->any())
+                @foreach($errors->all() as $err)
+                <p class="alert alert-danger">{{ $err }}</p>
+                @endforeach
+                @endif
 
+                <form action="{{ route('superuser.register.action') }}" method="POST">
+                    @csrf
+                    
                     <!-- Company Information -->
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="companyName" class="form-label">Company Name*</label>
-                            <input type="text" class="form-control" id="companyName" placeholder="Example Corp"
-                                required>
+                            <label for="full_name" class="form-label">Company Name*</label>
+                            <input type="text" name="full_name" class="form-control" id="full_name" 
+                                placeholder="Example Corp" value="{{ old('full_name') }}" required>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="industry" class="form-label">Industry*</label>
-                            <select class="form-select" id="industry" required>
-                                <option value="" selected disabled>Select Industry</option>
-                                <option value="technology">Technology</option>
-                                <option value="finance">Finance</option>
-                                <option value="manufacturing">Manufacturing</option>
-                                <option value="retail">Retail</option>
-                                <option value="other">Other</option>
+                            <label for="username" class="form-label">Username*</label>
+                            <input type="text" name="username" class="form-control" id="username" 
+                                placeholder="company_username" value="{{ old('username') }}" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Company Email*</label>
+                        <input type="email" name="email" class="form-control" id="email" 
+                            placeholder="hr@company.com" value="{{ old('email') }}" required>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="date_of_birth" class="form-label">Company Founded Date*</label>
+                            <input type="date" name="date_of_birth" class="form-control" id="date_of_birth" 
+                                value="{{ old('date_of_birth') }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="gender" class="form-label">Company Type*</label>
+                            <select name="gender" class="form-select" id="gender" required>
+                                <option value="" selected disabled>Select Company Type</option>
+                                <option value="Private" {{ old('gender') == 'Private' ? 'selected' : '' }}>Private Company</option>
+                                <option value="Public" {{ old('gender') == 'Public' ? 'selected' : '' }}>Public Company</option>
+                                <option value="Startup" {{ old('gender') == 'Startup' ? 'selected' : '' }}>Startup</option>
+                                <option value="NGO" {{ old('gender') == 'NGO' ? 'selected' : '' }}>NGO</option>
+                                <option value="Government" {{ old('gender') == 'Government' ? 'selected' : '' }}>Government</option>
                             </select>
                         </div>
                     </div>
 
                     <div class="mb-3">
-                        <label for="companyEmail" class="form-label">Company Email*</label>
-                        <input type="email" class="form-control" id="companyEmail" placeholder="hr@company.com"
-                            required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="phoneNumber" class="form-label">Phone Number*</label>
-                        <input type="tel" class="form-control" id="phoneNumber" placeholder="+62 812-3456-7890"
-                            required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="companyAddress" class="form-label">Company Address*</label>
-                        <textarea class="form-control" id="companyAddress" rows="2" placeholder="123 Example Street, Jakarta" required></textarea>
+                        <label for="address" class="form-label">Company Address*</label>
+                        <textarea name="address" class="form-control" id="address" rows="3" 
+                            placeholder="123 Example Street, Jakarta" required>{{ old('address') }}</textarea>
                     </div>
 
                     <!-- Account Information -->
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Password*</label>
-                        <input type="password" class="form-control" id="password"
-                            placeholder="Create password (min. 8 characters)" minlength="8" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="confirmPassword" class="form-label">Confirm Password*</label>
-                        <input type="password" class="form-control" id="confirmPassword" placeholder="Repeat password"
-                            required>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="password" class="form-label">Password*</label>
+                            <input type="password" name="password" class="form-control" id="password"
+                                placeholder="Create password (min. 8 characters)" minlength="8" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="confirmPassword" class="form-label">Confirm Password*</label>
+                            <input type="password" class="form-control" id="confirmPassword" 
+                                placeholder="Repeat password" required>
+                        </div>
                     </div>
 
                     <!-- Terms and Conditions -->
@@ -106,10 +114,10 @@
 
                 <div class="text-center mt-4">
                     <p class="text-muted">Already have a company account?
-                        <a href="login.html" class="text-decoration-none fw-bold"
+                        <a href="{{ route('superuser.login') }}" class="text-decoration-none fw-bold"
                             style="color: var(--primary-dark);">Login here</a>
                     </p>
-                    <p class="small text-muted">Want to register as a job seeker? <a href="register.html"
+                    <p class="small text-muted">Want to register as a job seeker? <a href="{{ route('users.create') }}"
                             class="text-decoration-none" style="color: var(--primary);">Click here</a></p>
                 </div>
             </div>

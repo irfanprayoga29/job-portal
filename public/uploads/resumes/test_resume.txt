@@ -1,0 +1,25 @@
+John Doe Resume
+
+OBJECTIVE:
+Seeking a challenging position in software development where I can apply my programming skills and contribute to innovative projects.
+
+EDUCATION:
+Bachelor of Science in Computer Science
+University of Technology, 2020-2024
+
+EXPERIENCE:
+Junior Developer - Tech Solutions Inc. (2023-Present)
+- Developed web applications using Laravel and PHP
+- Collaborated with cross-functional teams
+- Maintained and updated existing software systems
+
+SKILLS:
+- Programming Languages: PHP, JavaScript, Python, Java
+- Web Technologies: HTML, CSS, Laravel, React
+- Databases: MySQL, PostgreSQL
+- Tools: Git, Docker, VS Code
+
+CONTACT:
+Email: john.doe@email.com
+Phone: (555) 123-4567
+Location: New York, NY
