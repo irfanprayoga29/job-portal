@@ -1,0 +1,11 @@
+# nixpacks.toml
+[variables]
+PHP_VERSION = "8.2"
+
+[phases.build]
+cmds = [
+    "composer install --no-dev --optimize-autoloader"
+]
+
+[phases.start]
+cmd = "php artisan serve --host=0.0.0.0 --port=$PORT"
