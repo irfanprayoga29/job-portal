@@ -23,7 +23,7 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 WORKDIR /app
 
 # Copy composer files first for better caching
-COPY composer.json composer.lock ./
+COPY composer.json composer.lock .env.example ./
 
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader --no-scripts
@@ -39,7 +39,7 @@ RUN chmod -R 775 storage bootstrap/cache && \
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-# Create .env file for build process
+# Create .env file for build process using .env.example
 RUN cp .env.example .env && \
     php artisan key:generate --force
 
