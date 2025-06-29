@@ -85,10 +85,7 @@ Route::get('/superuser/apply', function () {
 //     return view('user.login'); // pastikan view-nya ada
 // })->name('login');
 
-
-Route::post('/user/store', [UsersController::class, 'store'])->name('users.store');
-// Route::get('/user/landing', [UsersController::class, 'index'])->name('users.index');
-
+// User routes - using resource route for RESTful operations
 Route::resource('users', UsersController::class);
 
 // superuser routes

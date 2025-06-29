@@ -2,8 +2,8 @@
 
 echo "Starting Laravel Job Portal deployment..."
 
-# Check if we're in Railway environment (has DATABASE_URL or MySQL variables)
-if [ -n "$DATABASE_URL" ] || [ -n "$MYSQL_HOST" ]; then
+# Check if we're in Railway environment (check for Railway-specific variables)
+if [ -n "$RAILWAY_ENVIRONMENT" ] || [ -n "$DATABASE_URL" ] || [ -n "$MYSQL_HOST" ] || [ -n "$PORT" ]; then
     echo "Production environment detected, waiting for database..."
     
     # Wait for database to be ready
@@ -25,11 +25,15 @@ else
     echo "Local environment detected, skipping database operations..."
 fi
 
-# Cache configuration
+# Cache configuration (skip route cache if there are errors)
 echo "Caching configuration..."
 php artisan config:cache
-php artisan route:cache
+
+echo "Caching views..."
 php artisan view:cache
+
+echo "Attempting route cache (may skip if errors)..."
+php artisan route:cache || echo "Route caching skipped due to errors"
 
 # Start the server
 echo "Starting Laravel server on port ${PORT:-8080}..."
