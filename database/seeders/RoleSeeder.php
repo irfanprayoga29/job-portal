@@ -12,9 +12,12 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('roles')->insert([
-            ['id' => 1, 'name' => 'Applicant', 'created_at' => now(), 'updated_at' => now()],
-            ['id' => 2, 'name' => 'Company', 'created_at' => now(), 'updated_at' => now()],
-        ]);
+        // Check if roles already exist to avoid duplicate entries
+        if (DB::table('roles')->count() == 0) {
+            DB::table('roles')->insert([
+                ['id' => 1, 'name' => 'Applicant', 'created_at' => now(), 'updated_at' => now()],
+                ['id' => 2, 'name' => 'Company', 'created_at' => now(), 'updated_at' => now()],
+            ]);
+        }
     }
 }
