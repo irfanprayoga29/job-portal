@@ -35,6 +35,10 @@ COPY . .
 RUN chmod -R 775 storage bootstrap/cache && \
     chown -R www-data:www-data storage bootstrap/cache
 
+# Copy and make entrypoint executable
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 # Create .env file for build process
 RUN cp .env.example .env && \
     php artisan key:generate --force
@@ -42,8 +46,5 @@ RUN cp .env.example .env && \
 # Expose port
 EXPOSE 8080
 
-# Start command with config caching at runtime
-CMD php artisan config:cache && \
-    php artisan route:cache && \
-    php artisan view:cache && \
-    php artisan serve --host=0.0.0.0 --port=8080
+# Use entrypoint script
+CMD ["/entrypoint.sh"]
