@@ -11,7 +11,6 @@ A comprehensive job portal application built with Laravel 12 that connects job s
 ### 👥 **Multi-Role System**
 - **Job Seekers (Applicants)**: Browse jobs, apply, manage profile and resume
 - **Companies**: Post jobs, manage applications, company profile
-- **Super Admin**: Full system management and oversight
 
 ### 🔍 **Job Management**
 - **Job Posting**: Companies can create detailed job listings
