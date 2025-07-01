@@ -13,7 +13,7 @@ if [ -n "$RAILWAY_ENVIRONMENT" ] || [ -n "$DATABASE_URL" ] || [ -n "$MYSQL_HOST"
     # Try to run migrations directly (will create migration table if needed)
     echo "Running migrations..."
     # php artisan migrate --force || echo "Migration failed, continuing..."
-    php artisan migrate:refresh || echo "Migration failed, continuing..."
+    php artisan migrate:fresh || echo "Migration failed, continuing..."
 
     # Seed database if empty
     echo "Checking if database needs seeding..."
