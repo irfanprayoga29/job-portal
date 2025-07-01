@@ -108,7 +108,7 @@
                                                             <i class="bi bi-geo-alt"></i> {{ $job->location }}
                                                         </span>
                                                         <span class="me-3">
-                                                            <i class="bi bi-currency-dollar"></i> {{ $job->formatted_salary }}
+                                                            <i class="bi bi-cash"></i> {{ $job->formatted_salary }}
                                                         </span>
                                                         <span>
                                                             <i class="bi bi-calendar"></i> Posted {{ $job->created_at->diffForHumans() }}
