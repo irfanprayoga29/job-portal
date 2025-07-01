@@ -220,7 +220,7 @@
                                                             <i class="bi bi-geo-alt"></i> {{ $job->location }}
                                                         </span>
                                                         <span class="job-salary">
-                                                            <i class="bi bi-currency-dollar"></i> {{ $job->salary_range }}
+                                                            <i class="bi bi-cash"></i> {{ $job->salary_range }}
                                                         </span>
                                                     </div>
                                                     
