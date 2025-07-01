@@ -192,7 +192,7 @@
                             <h5 class="fw-bold mb-3">Job Information</h5>
                             
                             <div class="job-meta-item">
-                                <i class="bi bi-currency-dollar"></i>
+                                <i class="bi bi-cash"></i>
                                 <div>
                                     <strong>Salary</strong><br>
                                     <span class="text-muted">{{ $job->salary_range }}</span>
