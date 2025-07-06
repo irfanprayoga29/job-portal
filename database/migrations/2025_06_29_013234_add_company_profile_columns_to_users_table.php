@@ -13,16 +13,19 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             // Check if columns don't exist before adding
-            if (!Schema::hasColumn('users', 'company_logo')) {
+            if (! Schema::hasColumn('users', 'company_logo')) {
                 $table->string('company_logo')->nullable();
             }
-            if (!Schema::hasColumn('users', 'company_description')) {
+            if (! Schema::hasColumn('users', 'company_banner')) {
+                $table->string('company_banner')->nullable();
+            }
+            if (! Schema::hasColumn('users', 'company_description')) {
                 $table->text('company_description')->nullable();
             }
-            if (!Schema::hasColumn('users', 'company_website')) {
+            if (! Schema::hasColumn('users', 'company_website')) {
                 $table->string('company_website')->nullable();
             }
-            if (!Schema::hasColumn('users', 'phone')) {
+            if (! Schema::hasColumn('users', 'phone')) {
                 $table->string('phone')->nullable();
             }
             // address already exists, no need to add
@@ -35,7 +38,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['company_logo', 'company_description', 'company_website', 'phone']);
+            $table->dropColumn(['company_logo', 'company_banner', 'company_description', 'company_website', 'phone']);
         });
     }
 };

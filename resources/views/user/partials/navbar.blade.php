@@ -55,16 +55,16 @@
         right: 0;
         min-width: 200px;
     }
-    
+
     .dropdown-menu.show {
         display: block;
     }
-    
+
     /* CSS only hover fallback */
     .dropdown:hover .dropdown-menu {
         display: block;
     }
-    
+
     .dropdown-toggle::after {
         margin-left: 0.5rem;
     }
@@ -91,7 +91,8 @@
                     @auth
                         <li class="nav-item dropdown position-relative">
                             <a class="nav-link" href="#" id="userDropdown" onclick="toggleDropdown(event)">
-                                <i class="bi bi-person-circle"></i> {{ Auth::user()->full_name }} <i class="bi bi-chevron-down"></i>
+                                <img src="uploads/profiles/visa.png" class="rounded-circle" style="width: 30px;">
+                                {{ Auth::user()->full_name }} <i class="bi bi-chevron-down"></i>
                             </a>
                             <div class="dropdown-menu dropdown-menu-end shadow" id="userDropdownMenu">
                                 <a class="dropdown-item" href="{{ route('users.landing') }}">

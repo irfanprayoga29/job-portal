@@ -14,21 +14,20 @@
             background: linear-gradient(135deg, #FF0B55 0%, #CF0F47 100%);
             color: white;
             padding: 60px 0 40px 0;
-            margin-top: 56px;
         }
-        
+
         .job-card {
             border: none;
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
             transition: transform 0.3s ease;
             margin-bottom: 20px;
         }
-        
+
         .job-card:hover {
             transform: translateY(-3px);
         }
-        
+
         .status-active {
             background: #d4edda;
             color: #155724;
@@ -36,7 +35,7 @@
             border-radius: 4px;
             font-size: 0.8rem;
         }
-        
+
         .status-inactive {
             background: #f8d7da;
             color: #721c24;
@@ -44,7 +43,7 @@
             border-radius: 4px;
             font-size: 0.8rem;
         }
-        
+
         .btn-action {
             padding: 5px 10px;
             font-size: 0.8rem;
@@ -77,7 +76,7 @@
     <!-- Jobs List -->
     <section class="py-5">
         <div class="container">
-            @if(session('success'))
+            @if (session('success'))
                 <div class="alert alert-success">
                     {{ session('success') }}
                 </div>
@@ -88,10 +87,10 @@
                     <h3 class="fw-bold">{{ $jobs->total() }} Job Postings</h3>
                 </div>
             </div>
-            
-            @if($jobs->count() > 0)
+
+            @if ($jobs->count() > 0)
                 <div class="row">
-                    @foreach($jobs as $job)
+                    @foreach ($jobs as $job)
                         <div class="col-12">
                             <div class="card job-card">
                                 <div class="card-body p-4">
@@ -99,7 +98,8 @@
                                         <div class="col-md-8">
                                             <div class="d-flex align-items-start">
                                                 <div class="me-3">
-                                                    <i class="bi bi-briefcase" style="font-size: 2rem; color: #FF0B55;"></i>
+                                                    <i class="bi bi-briefcase"
+                                                        style="font-size: 2rem; color: #FF0B55;"></i>
                                                 </div>
                                                 <div class="flex-grow-1">
                                                     <h5 class="card-title mb-2">{{ $job->name }}</h5>
@@ -111,28 +111,31 @@
                                                             <i class="bi bi-cash"></i> {{ $job->formatted_salary }}
                                                         </span>
                                                         <span>
-                                                            <i class="bi bi-calendar"></i> Posted {{ $job->created_at->diffForHumans() }}
-                                                            @if($job->created_at->ne($job->updated_at))
-                                                                <span class="text-warning ms-2">• edited {{ $job->updated_at->diffForHumans() }}</span>
+                                                            <i class="bi bi-calendar"></i> Posted
+                                                            {{ $job->created_at->diffForHumans() }}
+                                                            @if ($job->created_at->ne($job->updated_at))
+                                                                <span class="text-warning ms-2">• edited
+                                                                    {{ $job->updated_at->diffForHumans() }}</span>
                                                             @endif
                                                         </span>
                                                     </div>
-                                                    
-                                                    @if($job->categories->count() > 0)
+
+                                                    @if ($job->categories->count() > 0)
                                                         <div class="mb-2">
-                                                            @foreach($job->categories as $category)
-                                                                <span class="badge bg-info me-1">{{ $category->name }}</span>
+                                                            @foreach ($job->categories as $category)
+                                                                <span
+                                                                    class="badge bg-info me-1">{{ $category->name }}</span>
                                                             @endforeach
                                                         </div>
                                                     @endif
-                                                    
+
                                                     <div class="text-muted">
-                                                        @if($job->employment_type)
+                                                        @if ($job->employment_type)
                                                             <span class="me-3">
                                                                 <i class="bi bi-clock"></i> {{ $job->employment_type }}
                                                             </span>
                                                         @endif
-                                                        @if($job->experience_level)
+                                                        @if ($job->experience_level)
                                                             <span>
                                                                 <i class="bi bi-star"></i> {{ $job->experience_level }}
                                                             </span>
@@ -143,7 +146,7 @@
                                         </div>
                                         <div class="col-md-4 text-md-end">
                                             <div class="mb-3">
-                                                @if($job->status)
+                                                @if ($job->status)
                                                     <span class="status-active">
                                                         <i class="bi bi-check-circle"></i> Active
                                                     </span>
@@ -153,31 +156,32 @@
                                                     </span>
                                                 @endif
                                             </div>
-                                            
+
                                             <div class="mb-2">
                                                 <small class="text-muted">
                                                     {{ $job->applications->count() }} Application(s)
                                                 </small>
                                             </div>
-                                            
+
                                             <div class="d-flex flex-wrap justify-content-md-end">
-                                                <a href="{{ route('superuser.jobs.applications', $job->id) }}" 
-                                                   class="btn btn-outline-primary btn-action">
+                                                <a href="{{ route('superuser.jobs.applications', $job->id) }}"
+                                                    class="btn btn-outline-primary btn-action">
                                                     <i class="bi bi-people"></i> Applications
                                                 </a>
-                                                <a href="{{ route('jobs.show', $job->id) }}" 
-                                                   class="btn btn-outline-info btn-action">
+                                                <a href="{{ route('jobs.show', $job->id) }}"
+                                                    class="btn btn-outline-info btn-action">
                                                     <i class="bi bi-eye"></i> View
                                                 </a>
-                                                <a href="{{ route('superuser.jobs.edit', $job->id) }}" 
-                                                   class="btn btn-outline-warning btn-action">
+                                                <a href="{{ route('superuser.jobs.edit', $job->id) }}"
+                                                    class="btn btn-outline-warning btn-action">
                                                     <i class="bi bi-pencil"></i> Edit
                                                 </a>
-                                                <form action="{{ route('superuser.jobs.destroy', $job->id) }}" method="POST" class="d-inline">
+                                                <form action="{{ route('superuser.jobs.destroy', $job->id) }}"
+                                                    method="POST" class="d-inline">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-outline-danger btn-action" 
-                                                            onclick="return confirm('Are you sure you want to delete this job?')">
+                                                    <button type="submit" class="btn btn-outline-danger btn-action"
+                                                        onclick="return confirm('Are you sure you want to delete this job?')">
                                                         <i class="bi bi-trash"></i> Delete
                                                     </button>
                                                 </form>

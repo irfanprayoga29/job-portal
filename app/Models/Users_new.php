@@ -1,29 +1,28 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class Users extends Authenticatable
+class Users_new extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    protected $table = 'users';
+    protected $table      = 'users';
     protected $primaryKey = 'id';
-    
+
     protected $fillable = [
-        'full_name', 
-        'username', 
-        'email', 
-        'password', 
-        'date_of_birth', 
-        'gender', 
-        'address', 
+        'full_name',
+        'username',
+        'email',
+        'password',
+        'date_of_birth',
+        'gender',
+        'address',
         'about_me',
         'work_experience',
-        'education', 
+        'education',
         'skills',
         'interests',
         'awards',
@@ -31,14 +30,15 @@ class Users extends Authenticatable
         'phone',
         'linkedin',
         'website',
-        'resume_id', 
-        'role_id', 
-        'company_name', 
-        'company_logo', 
-        'company_description', 
-        'company_website'
+        'resume_id',
+        'role_id',
+        'company_name',
+        'company_logo',
+        'company_banner',
+        'company_description',
+        'company_website',
     ];
-    
+
     protected $hidden = [
         'password',
         'remember_token',
@@ -46,14 +46,14 @@ class Users extends Authenticatable
 
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'password' => 'hashed',
-        'date_of_birth' => 'date',
-        'work_experience' => 'array',
-        'education' => 'array',
-        'skills' => 'array',
-        'interests' => 'array',
-        'awards' => 'array',
-        'certificates' => 'array'
+        'password'          => 'hashed',
+        'date_of_birth'     => 'date',
+        'work_experience'   => 'array',
+        'education'         => 'array',
+        'skills'            => 'array',
+        'interests'         => 'array',
+        'awards'            => 'array',
+        'certificates'      => 'array',
     ];
 
     // Relationship with Role
@@ -98,16 +98,16 @@ class Users extends Authenticatable
         if ($this->isApplicant()) {
             return [
                 'applications_sent' => $this->applications()->count(),
-                'saved_jobs' => 0, // Implement saved jobs later
-                'profile_views' => 0, // Implement profile views later
-                'resumes_uploaded' => $this->resumes()->count()
+                'saved_jobs'        => 0, // Implement saved jobs later
+                'profile_views'     => 0, // Implement profile views later
+                'resumes_uploaded'  => $this->resumes()->count(),
             ];
         } else {
             return [
-                'jobs_posted' => $this->jobs()->count(),
+                'jobs_posted'           => $this->jobs()->count(),
                 'applications_received' => $this->jobs()->withCount('applications')->get()->sum('applications_count'),
-                'active_jobs' => $this->jobs()->where('status', true)->count(),
-                'company_views' => 0 // Implement company views later
+                'active_jobs'           => $this->jobs()->where('status', true)->count(),
+                'company_views'         => 0, // Implement company views later
             ];
         }
     }
