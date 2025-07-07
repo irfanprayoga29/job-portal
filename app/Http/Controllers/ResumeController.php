@@ -1,11 +1,9 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Resume;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 
 class ResumeController extends Controller
 {
@@ -14,7 +12,7 @@ class ResumeController extends Controller
      */
     public function index()
     {
-        if (!Auth::check() || !Auth::user()->isApplicant()) {
+        if (! Auth::check() || ! Auth::user()->isApplicant()) {
             return redirect()->route('login')->with('error', 'Access denied. Applicant account required.');
         }
 
@@ -27,7 +25,7 @@ class ResumeController extends Controller
      */
     public function create()
     {
-        if (!Auth::check() || !Auth::user()->isApplicant()) {
+        if (! Auth::check() || ! Auth::user()->isApplicant()) {
             return redirect()->route('login')->with('error', 'Access denied. Applicant account required.');
         }
 
@@ -40,29 +38,26 @@ class ResumeController extends Controller
     public function store(Request $request)
     {
         try {
-            if (!Auth::check() || !Auth::user()->isApplicant()) {
+            if (! Auth::check() || ! Auth::user()->isApplicant()) {
                 return redirect()->route('login')->with('error', 'Access denied. Applicant account required.');
             }
 
             $request->validate([
                 'resume_file' => 'required|file|mimes:pdf,doc,docx|max:5120', // 5MB max
                 'description' => 'nullable|string|max:500',
-                'is_active' => 'boolean'
+                'is_active'   => 'boolean',
             ]);
 
             // Create uploads directory if it doesn't exist
             $uploadPath = public_path('uploads/resumes');
-            if (!file_exists($uploadPath)) {
+            if (! file_exists($uploadPath)) {
                 mkdir($uploadPath, 0755, true);
             }
 
             // Handle file upload
-            $file = $request->file('resume_file');
+            $file     = $request->file('resume_file');
             $fileName = time() . '_' . Auth::id() . '_' . $file->getClientOriginalName();
             $filePath = 'uploads/resumes/' . $fileName;
-            
-            // Move file to public directory
-            $file->move($uploadPath, $fileName);
 
             // If this is set as active, deactivate other resumes
             if ($request->has('is_active') && $request->is_active) {
@@ -71,14 +66,17 @@ class ResumeController extends Controller
 
             // Create resume record
             $resume = Resume::create([
-                'user_id' => Auth::id(),
-                'file_name' => $file->getClientOriginalName(),
-                'file_path' => $filePath,
-                'file_type' => $file->getClientOriginalExtension(),
-                'file_size' => $file->getSize(),
+                'user_id'     => Auth::id(),
+                'file_name'   => $file->getClientOriginalName(),
+                'file_path'   => $filePath,
+                'file_type'   => $file->getClientOriginalExtension(),
+                'file_size'   => $file->getSize(),
                 'description' => $request->description,
-                'is_active' => $request->has('is_active') ? $request->is_active : false
+                'is_active'   => $request->has('is_active') ? $request->is_active : false,
             ]);
+
+            // Move file to public directory
+            $file->move($uploadPath, $fileName);
 
             return redirect()->route('resumes.index')
                 ->with('success', 'Resume uploaded successfully!');
@@ -95,7 +93,7 @@ class ResumeController extends Controller
      */
     public function show(Resume $resume)
     {
-        if (!Auth::check() || Auth::id() !== $resume->user_id) {
+        if (! Auth::check() || Auth::id() !== $resume->user_id) {
             return redirect()->route('resumes.index')->with('error', 'Access denied.');
         }
 
@@ -107,7 +105,7 @@ class ResumeController extends Controller
      */
     public function edit(Resume $resume)
     {
-        if (!Auth::check() || Auth::id() !== $resume->user_id) {
+        if (! Auth::check() || Auth::id() !== $resume->user_id) {
             return redirect()->route('resumes.index')->with('error', 'Access denied.');
         }
 
@@ -120,19 +118,19 @@ class ResumeController extends Controller
     public function update(Request $request, Resume $resume)
     {
         try {
-            if (!Auth::check() || Auth::id() !== $resume->user_id) {
+            if (! Auth::check() || Auth::id() !== $resume->user_id) {
                 return redirect()->route('resumes.index')->with('error', 'Access denied.');
             }
 
             $request->validate([
                 'resume_file' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
                 'description' => 'nullable|string|max:500',
-                'is_active' => 'boolean'
+                'is_active'   => 'boolean',
             ]);
 
             $updateData = [
                 'description' => $request->description,
-                'is_active' => $request->has('is_active') ? $request->is_active : false
+                'is_active'   => $request->has('is_active') ? $request->is_active : false,
             ];
 
             // Handle file upload if new file is provided
@@ -141,10 +139,10 @@ class ResumeController extends Controller
                 $resume->deleteFile();
 
                 // Upload new file
-                $file = $request->file('resume_file');
+                $file     = $request->file('resume_file');
                 $fileName = time() . '_' . Auth::id() . '_' . $file->getClientOriginalName();
                 $filePath = 'uploads/resumes/' . $fileName;
-                
+
                 $uploadPath = public_path('uploads/resumes');
                 $file->move($uploadPath, $fileName);
 
@@ -177,7 +175,7 @@ class ResumeController extends Controller
     public function destroy(Resume $resume)
     {
         try {
-            if (!Auth::check() || Auth::id() !== $resume->user_id) {
+            if (! Auth::check() || Auth::id() !== $resume->user_id) {
                 return redirect()->route('resumes.index')->with('error', 'Access denied.');
             }
 
@@ -201,11 +199,11 @@ class ResumeController extends Controller
      */
     public function download(Resume $resume)
     {
-        if (!Auth::check() || Auth::id() !== $resume->user_id) {
+        if (! Auth::check() || Auth::id() !== $resume->user_id) {
             abort(403, 'Access denied.');
         }
 
-        if (!$resume->fileExists()) {
+        if (! $resume->fileExists()) {
             return redirect()->back()->with('error', 'Resume file not found.');
         }
 
@@ -218,13 +216,13 @@ class ResumeController extends Controller
     public function setActive(Resume $resume)
     {
         try {
-            if (!Auth::check() || Auth::id() !== $resume->user_id) {
+            if (! Auth::check() || Auth::id() !== $resume->user_id) {
                 return redirect()->route('resumes.index')->with('error', 'Access denied.');
             }
 
             // Deactivate all other resumes
             Auth::user()->resumes()->update(['is_active' => false]);
-            
+
             // Activate this resume
             $resume->update(['is_active' => true]);
 

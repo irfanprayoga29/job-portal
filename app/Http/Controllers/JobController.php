@@ -1,10 +1,9 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Models\Job;
-use App\Models\Categories;
 use App\Models\Application;
+use App\Models\Categories;
+use App\Models\Job;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,12 +16,12 @@ class JobController extends Controller
         // Search functionality
         if ($request->has('search') && $request->search) {
             $query->where('name', 'like', '%' . $request->search . '%')
-                  ->orWhere('location', 'like', '%' . $request->search . '%');
+                ->orWhere('location', 'like', '%' . $request->search . '%');
         }
 
         // Category filter
         if ($request->has('category') && $request->category) {
-            $query->whereHas('categories', function($q) use ($request) {
+            $query->whereHas('categories', function ($q) use ($request) {
                 $q->where('categories.id', $request->category);
             });
         }
@@ -46,7 +45,7 @@ class JobController extends Controller
             $query->where('employment_type', $request->employment_type);
         }
 
-        $jobs = $query->recent()->paginate(10);
+        $jobs       = $query->recent()->paginate(10);
         $categories = Categories::all();
 
         return view('user.jobs.index', compact('jobs', 'categories'));
@@ -54,7 +53,7 @@ class JobController extends Controller
 
     public function show($id)
     {
-        $job = Job::with(['company', 'categories'])->findOrFail($id);
+        $job         = Job::with(['company', 'categories'])->findOrFail($id);
         $relatedJobs = Job::with(['company'])
             ->where('id', '!=', $id)
             ->active()
@@ -64,8 +63,8 @@ class JobController extends Controller
         $hasApplied = false;
         if (Auth::check()) {
             $hasApplied = Application::where('user_id', Auth::id())
-                                   ->where('job_id', $id)
-                                   ->exists();
+                ->where('job_id', $id)
+                ->exists();
         }
 
         return view('user.jobs.show', compact('job', 'relatedJobs', 'hasApplied'));
@@ -73,7 +72,7 @@ class JobController extends Controller
 
     public function apply(Request $request, $id)
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return redirect()->route('login')->with('error', 'Please login to apply for jobs');
         }
 
@@ -81,8 +80,8 @@ class JobController extends Controller
 
         // Check if already applied
         $existingApplication = Application::where('user_id', Auth::id())
-                                        ->where('job_id', $id)
-                                        ->first();
+            ->where('job_id', $id)
+            ->first();
 
         if ($existingApplication) {
             return back()->with('error', 'You have already applied for this job');
@@ -90,32 +89,32 @@ class JobController extends Controller
 
         $request->validate([
             'cover_letter' => 'required|string|max:2000',
-            'resume_id' => 'nullable|exists:resumes,id',
+            'resume_id'    => 'nullable|exists:resumes,id',
         ]);
 
         // Get user's active resume if no specific resume selected
         $resumeId = $request->resume_id;
-        if (!$resumeId) {
+        if (! $resumeId) {
             $activeResume = Auth::user()->resumes()->where('is_active', true)->first();
-            $resumeId = $activeResume ? $activeResume->id : null;
+            $resumeId     = $activeResume ? $activeResume->id : null;
         }
 
         // Ensure the selected resume belongs to the user
         if ($resumeId) {
             $resume = Auth::user()->resumes()->find($resumeId);
-            if (!$resume) {
+            if (! $resume) {
                 return back()->with('error', 'Invalid resume selected');
             }
             $resumeId = $resume->id;
         }
 
         Application::create([
-            'user_id' => Auth::id(),
-            'job_id' => $id,
-            'resume_id' => $resumeId,
+            'user_id'        => Auth::id(),
+            'job_id'         => $id,
+            'resume_id'      => $resumeId,
             'date_submitted' => now(),
-            'status' => false, // Pending
-            'cover_letter' => $request->cover_letter
+            'status'         => false, // Pending
+                                       // 'cover_letter' => $request->cover_letter
         ]);
 
         return back()->with('success', 'Application submitted successfully!');
@@ -123,7 +122,7 @@ class JobController extends Controller
 
     public function myApplications()
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return redirect()->route('login');
         }
 
@@ -138,7 +137,7 @@ class JobController extends Controller
     // Company methods
     public function create()
     {
-        if (!Auth::check() || !Auth::user()->isCompany()) {
+        if (! Auth::check() || ! Auth::user()->isCompany()) {
             return redirect()->route('superuser.login');
         }
 
@@ -148,32 +147,32 @@ class JobController extends Controller
 
     public function store(Request $request)
     {
-        if (!Auth::check() || !Auth::user()->isCompany()) {
+        if (! Auth::check() || ! Auth::user()->isCompany()) {
             return redirect()->route('superuser.login');
         }
 
         $request->validate([
-            'name' => 'required|string|max:255',
-            'location' => 'required|string|max:255',
-            'salary' => 'required|integer|min:0',
-            'description' => 'required|string',
-            'requirements' => 'required|string',
-            'employment_type' => 'required|string',
+            'name'             => 'required|string|max:255',
+            'location'         => 'required|string|max:255',
+            'salary'           => 'required|integer|min:0',
+            'description'      => 'required|string',
+            'requirements'     => 'required|string',
+            'employment_type'  => 'required|string',
             'experience_level' => 'required|string',
-            'categories' => 'required|array',
-            'categories.*' => 'exists:categories,id'
+            'categories'       => 'required|array',
+            'categories.*'     => 'exists:categories,id',
         ]);
 
         $job = Job::create([
-            'name' => $request->name,
-            'location' => $request->location,
-            'salary' => $request->salary,
-            'description' => $request->description,
-            'requirements' => $request->requirements,
-            'employment_type' => $request->employment_type,
+            'name'             => $request->name,
+            'location'         => $request->location,
+            'salary'           => $request->salary,
+            'description'      => $request->description,
+            'requirements'     => $request->requirements,
+            'employment_type'  => $request->employment_type,
             'experience_level' => $request->experience_level,
-            'status' => true,
-            'user_id' => Auth::id()
+            'status'           => true,
+            'user_id'          => Auth::id(),
         ]);
 
         $job->categories()->sync($request->categories);
@@ -183,7 +182,7 @@ class JobController extends Controller
 
     public function companyJobs()
     {
-        if (!Auth::check() || !Auth::user()->isCompany()) {
+        if (! Auth::check() || ! Auth::user()->isCompany()) {
             return redirect()->route('superuser.login');
         }
 
@@ -197,11 +196,11 @@ class JobController extends Controller
 
     public function edit($id)
     {
-        if (!Auth::check() || !Auth::user()->isCompany()) {
+        if (! Auth::check() || ! Auth::user()->isCompany()) {
             return redirect()->route('superuser.login');
         }
 
-        $job = Job::where('user_id', Auth::id())->findOrFail($id);
+        $job        = Job::where('user_id', Auth::id())->findOrFail($id);
         $categories = Categories::all();
 
         return view('superuser.jobs.edit', compact('job', 'categories'));
@@ -209,32 +208,32 @@ class JobController extends Controller
 
     public function update(Request $request, $id)
     {
-        if (!Auth::check() || !Auth::user()->isCompany()) {
+        if (! Auth::check() || ! Auth::user()->isCompany()) {
             return redirect()->route('superuser.login');
         }
 
         $job = Job::where('user_id', Auth::id())->findOrFail($id);
 
         $request->validate([
-            'name' => 'required|string|max:255',
-            'location' => 'required|string|max:255',
-            'salary' => 'required|integer|min:0',
-            'description' => 'required|string',
-            'requirements' => 'required|string',
-            'employment_type' => 'required|string',
+            'name'             => 'required|string|max:255',
+            'location'         => 'required|string|max:255',
+            'salary'           => 'required|integer|min:0',
+            'description'      => 'required|string',
+            'requirements'     => 'required|string',
+            'employment_type'  => 'required|string',
             'experience_level' => 'required|string',
-            'categories' => 'required|array',
-            'categories.*' => 'exists:categories,id'
+            'categories'       => 'required|array',
+            'categories.*'     => 'exists:categories,id',
         ]);
 
         $job->update([
-            'name' => $request->name,
-            'location' => $request->location,
-            'salary' => $request->salary,
-            'description' => $request->description,
-            'requirements' => $request->requirements,
-            'employment_type' => $request->employment_type,
-            'experience_level' => $request->experience_level
+            'name'             => $request->name,
+            'location'         => $request->location,
+            'salary'           => $request->salary,
+            'description'      => $request->description,
+            'requirements'     => $request->requirements,
+            'employment_type'  => $request->employment_type,
+            'experience_level' => $request->experience_level,
         ]);
 
         $job->categories()->sync($request->categories);
@@ -244,7 +243,7 @@ class JobController extends Controller
 
     public function destroy($id)
     {
-        if (!Auth::check() || !Auth::user()->isCompany()) {
+        if (! Auth::check() || ! Auth::user()->isCompany()) {
             return redirect()->route('superuser.login');
         }
 
@@ -256,11 +255,11 @@ class JobController extends Controller
 
     public function jobApplications($id)
     {
-        if (!Auth::check() || !Auth::user()->isCompany()) {
+        if (! Auth::check() || ! Auth::user()->isCompany()) {
             return redirect()->route('superuser.login');
         }
 
-        $job = Job::where('user_id', Auth::id())->findOrFail($id);
+        $job          = Job::where('user_id', Auth::id())->findOrFail($id);
         $applications = Application::with(['user'])
             ->where('job_id', $id)
             ->orderBy('date_submitted', 'desc')
@@ -272,17 +271,17 @@ class JobController extends Controller
     public function showApplyForm($id)
     {
         $job = Job::with(['company', 'categories'])->findOrFail($id);
-        
+
         // Check if user has already applied
         $existingApplication = Application::where('job_id', $id)
             ->where('user_id', Auth::id())
             ->first();
-            
+
         if ($existingApplication) {
             return redirect()->route('jobs.show', $id)
                 ->with('error', 'You have already applied for this job.');
         }
-        
+
         return view('user.apply_dynamic', compact('job'));
     }
 }
