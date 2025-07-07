@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,15 +16,15 @@
             padding: 40px 0;
             margin-top: 56px;
         }
-        
+
         .profile-card {
             background: white;
             border-radius: 15px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
             padding: 30px;
             margin-bottom: 30px;
         }
-        
+
         .profile-avatar {
             width: 120px;
             height: 120px;
@@ -36,7 +37,7 @@
             color: white;
             margin: 0 auto 20px;
         }
-        
+
         .section-title {
             color: #FF0B55;
             font-weight: 600;
@@ -44,7 +45,7 @@
             padding-bottom: 10px;
             border-bottom: 2px solid #f0f0f0;
         }
-        
+
         .add-button {
             background: #FF0B55;
             color: white;
@@ -57,13 +58,13 @@
             z-index: 1;
             position: relative;
         }
-        
+
         .add-button:hover {
             background: #CF0F47;
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(255, 11, 85, 0.3);
         }
-        
+
         .info-badge {
             background: #F8F9FA;
             border: 1px solid #E9ECEF;
@@ -73,47 +74,50 @@
             display: inline-block;
             font-size: 14px;
         }
-        
-        .experience-item, .education-item, .award-item, .certificate-item {
+
+        .experience-item,
+        .education-item,
+        .award-item,
+        .certificate-item {
             border: 1px solid #E9ECEF;
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 15px;
             background: #F8F9FA;
         }
-        
+
         .profile-stat {
             text-align: center;
             padding: 20px;
         }
-        
+
         .profile-stat h3 {
             color: #FF0B55;
             margin-bottom: 5px;
         }
-        
+
         .modal-header {
             background: linear-gradient(135deg, #FF0B55, #CF0F47);
             color: white;
             border-radius: 10px 10px 0 0;
         }
-        
+
         .btn-primary {
             background: #FF0B55;
             border-color: #FF0B55;
         }
-        
+
         .btn-primary:hover {
             background: #CF0F47;
             border-color: #CF0F47;
         }
-        
+
         .empty-state {
             text-align: center;
             padding: 40px 20px;
             color: #6c757d;
         }
-        
+
         .empty-state i {
             font-size: 3rem;
             color: #dee2e6;
@@ -167,25 +171,25 @@
         </div>
 
         {{-- Success/Error Messages --}}
-        @if(session('success'))
+        @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <i class="bi bi-check-circle me-2"></i>{{ session('success') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         @endif
 
-        @if(session('error'))
+        @if (session('error'))
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <i class="bi bi-exclamation-triangle me-2"></i>{{ session('error') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         @endif
 
-        @if($errors->any())
+        @if ($errors->any())
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <i class="bi bi-exclamation-triangle me-2"></i>
                 <ul class="mb-0">
-                    @foreach($errors->all() as $error)
+                    @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
                     @endforeach
                 </ul>
@@ -231,7 +235,7 @@
                     <i class="bi bi-plus me-1"></i>Add
                 </button>
             </div>
-            @if($user->about_me)
+            @if ($user->about_me)
                 <p>{{ $user->about_me }}</p>
             @else
                 <div class="empty-state">
@@ -251,8 +255,8 @@
                     <i class="bi bi-plus me-1"></i>Add
                 </button>
             </div>
-            @if($user->work_experience && count($user->work_experience) > 0)
-                @foreach($user->work_experience as $index => $experience)
+            @if ($user->work_experience && count($user->work_experience) > 0)
+                @foreach ($user->work_experience as $index => $experience)
                     <div class="experience-item">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
@@ -262,11 +266,12 @@
                                     <i class="bi bi-calendar me-1"></i>
                                     {{ $experience['start_date'] ?? '' }} - {{ $experience['end_date'] ?? 'Present' }}
                                 </p>
-                                @if(isset($experience['description']))
+                                @if (isset($experience['description']))
                                     <p class="mb-0">{{ $experience['description'] }}</p>
                                 @endif
                             </div>
-                            <button class="btn btn-sm btn-outline-danger" onclick="removeWorkExperience({{ $index }})">
+                            <button class="btn btn-sm btn-outline-danger"
+                                onclick="removeWorkExperience({{ $index }})">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </div>
@@ -290,8 +295,8 @@
                     <i class="bi bi-plus me-1"></i>Add
                 </button>
             </div>
-            @if($user->education && count($user->education) > 0)
-                @foreach($user->education as $index => $education)
+            @if ($user->education && count($user->education) > 0)
+                @foreach ($user->education as $index => $education)
                     <div class="education-item">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
@@ -301,11 +306,12 @@
                                     <i class="bi bi-calendar me-1"></i>
                                     {{ $education['start_year'] ?? '' }} - {{ $education['end_year'] ?? 'Ongoing' }}
                                 </p>
-                                @if(isset($education['gpa']))
+                                @if (isset($education['gpa']))
                                     <p class="mb-0"><strong>GPA:</strong> {{ $education['gpa'] }}</p>
                                 @endif
                             </div>
-                            <button class="btn btn-sm btn-outline-danger" onclick="removeEducation({{ $index }})">
+                            <button class="btn btn-sm btn-outline-danger"
+                                onclick="removeEducation({{ $index }})">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </div>
@@ -329,9 +335,9 @@
                     <i class="bi bi-plus me-1"></i>Add
                 </button>
             </div>
-            @if($user->skills && count($user->skills) > 0)
+            @if ($user->skills && count($user->skills) > 0)
                 <div>
-                    @foreach($user->skills as $skill)
+                    @foreach ($user->skills as $skill)
                         <span class="info-badge">{{ $skill }}</span>
                     @endforeach
                 </div>
@@ -353,9 +359,9 @@
                     <i class="bi bi-plus me-1"></i>Add
                 </button>
             </div>
-            @if($user->interests && count($user->interests) > 0)
+            @if ($user->interests && count($user->interests) > 0)
                 <div>
-                    @foreach($user->interests as $interest)
+                    @foreach ($user->interests as $interest)
                         <span class="info-badge">{{ $interest }}</span>
                     @endforeach
                 </div>
@@ -377,18 +383,19 @@
                     <i class="bi bi-eye me-1"></i>Manage Resume
                 </a>
             </div>
-            @if($user->resumes && $user->resumes->count() > 0)
-                @foreach($user->resumes as $resume)
+            @if ($user->resumes && $user->resumes->count() > 0)
+                @foreach ($user->resumes as $resume)
                     <div class="d-flex justify-content-between align-items-center p-3 border rounded mb-2">
                         <div>
                             <h6 class="mb-1">{{ $resume->title }}</h6>
                             <small class="text-muted">Uploaded: {{ $resume->created_at->format('d M Y') }}</small>
                         </div>
                         <div>
-                            @if($resume->is_active)
+                            @if ($resume->is_active)
                                 <span class="badge bg-success me-2">Active</span>
                             @endif
-                            <a href="{{ route('resumes.download', $resume->id) }}" class="btn btn-sm btn-outline-primary">
+                            <a href="{{ route('resumes.download', $resume->id) }}"
+                                class="btn btn-sm btn-outline-primary">
                                 <i class="bi bi-download"></i>
                             </a>
                         </div>
@@ -412,8 +419,8 @@
                     <i class="bi bi-plus me-1"></i>Add
                 </button>
             </div>
-            @if($user->awards && count($user->awards) > 0)
-                @foreach($user->awards as $index => $award)
+            @if ($user->awards && count($user->awards) > 0)
+                @foreach ($user->awards as $index => $award)
                     <div class="award-item">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
@@ -422,7 +429,7 @@
                                 <p class="mb-2">
                                     <i class="bi bi-calendar me-1"></i>{{ $award['date'] ?? '' }}
                                 </p>
-                                @if(isset($award['description']))
+                                @if (isset($award['description']))
                                     <p class="mb-0">{{ $award['description'] }}</p>
                                 @endif
                             </div>
@@ -450,8 +457,8 @@
                     <i class="bi bi-plus me-1"></i>Add
                 </button>
             </div>
-            @if($user->certificates && count($user->certificates) > 0)
-                @foreach($user->certificates as $index => $certificate)
+            @if ($user->certificates && count($user->certificates) > 0)
+                @foreach ($user->certificates as $index => $certificate)
                     <div class="certificate-item">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
@@ -460,15 +467,17 @@
                                 <p class="mb-2">
                                     <i class="bi bi-calendar me-1"></i>
                                     Issued: {{ $certificate['issue_date'] ?? '' }}
-                                    @if(isset($certificate['expiry_date']) && $certificate['expiry_date'])
+                                    @if (isset($certificate['expiry_date']) && $certificate['expiry_date'])
                                         | Expires: {{ $certificate['expiry_date'] }}
                                     @endif
                                 </p>
-                                @if(isset($certificate['credential_id']))
-                                    <p class="mb-0"><strong>Credential ID:</strong> {{ $certificate['credential_id'] }}</p>
+                                @if (isset($certificate['credential_id']))
+                                    <p class="mb-0"><strong>Credential ID:</strong>
+                                        {{ $certificate['credential_id'] }}</p>
                                 @endif
                             </div>
-                            <button class="btn btn-sm btn-outline-danger" onclick="removeCertificate({{ $index }})">
+                            <button class="btn btn-sm btn-outline-danger"
+                                onclick="removeCertificate({{ $index }})">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </div>
@@ -500,7 +509,8 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">LinkedIn</label>
-                            <input type="url" class="form-control" name="linkedin" value="{{ $user->linkedin }}">
+                            <input type="url" class="form-control" name="linkedin"
+                                value="{{ $user->linkedin }}">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Website/Portfolio</label>
@@ -557,19 +567,23 @@
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Position</label>
-                                        <input type="text" class="form-control" name="work_experience[0][position]" required>
+                                        <input type="text" class="form-control"
+                                            name="work_experience[0][position]" required>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Company</label>
-                                        <input type="text" class="form-control" name="work_experience[0][company]" required>
+                                        <input type="text" class="form-control" name="work_experience[0][company]"
+                                            required>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Start Date</label>
-                                        <input type="month" class="form-control" name="work_experience[0][start_date]" required>
+                                        <input type="month" class="form-control"
+                                            name="work_experience[0][start_date]" required>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">End Date</label>
-                                        <input type="month" class="form-control" name="work_experience[0][end_date]">
+                                        <input type="month" class="form-control"
+                                            name="work_experience[0][end_date]">
                                         <small class="text-muted">Leave empty if currently working</small>
                                     </div>
                                     <div class="col-12 mb-3">
@@ -577,7 +591,8 @@
                                         <textarea class="form-control" rows="3" name="work_experience[0][description]"></textarea>
                                     </div>
                                 </div>
-                                <button type="button" class="btn btn-sm btn-outline-danger remove-experience" style="display: none;">
+                                <button type="button" class="btn btn-sm btn-outline-danger remove-experience"
+                                    style="display: none;">
                                     <i class="bi bi-trash"></i> Remove
                                 </button>
                             </div>
@@ -611,27 +626,33 @@
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Degree/Major</label>
-                                        <input type="text" class="form-control" name="education[0][degree]" required>
+                                        <input type="text" class="form-control" name="education[0][degree]"
+                                            required>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Institution</label>
-                                        <input type="text" class="form-control" name="education[0][institution]" required>
+                                        <input type="text" class="form-control" name="education[0][institution]"
+                                            required>
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <label class="form-label">Start Year</label>
-                                        <input type="number" class="form-control" name="education[0][start_year]" min="1950" max="2030" required>
+                                        <input type="number" class="form-control" name="education[0][start_year]"
+                                            min="1950" max="2030" required>
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <label class="form-label">End Year</label>
-                                        <input type="number" class="form-control" name="education[0][end_year]" min="1950" max="2030">
+                                        <input type="number" class="form-control" name="education[0][end_year]"
+                                            min="1950" max="2030">
                                         <small class="text-muted">Leave empty if ongoing</small>
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <label class="form-label">GPA (Optional)</label>
-                                        <input type="number" class="form-control" name="education[0][gpa]" step="0.01" min="0" max="4">
+                                        <input type="number" class="form-control" name="education[0][gpa]"
+                                            step="0.01" min="0" max="4">
                                     </div>
                                 </div>
-                                <button type="button" class="btn btn-sm btn-outline-danger remove-education" style="display: none;">
+                                <button type="button" class="btn btn-sm btn-outline-danger remove-education"
+                                    style="display: none;">
                                     <i class="bi bi-trash"></i> Remove
                                 </button>
                             </div>
@@ -657,21 +678,24 @@
                     <h5 class="modal-title">Edit Skills</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <form action="{{ route('profile.update.skills') }}" method="POST" onsubmit="return debugSkillsForm(event, this);">
+                <form action="{{ route('profile.update.skills') }}" method="POST"
+                    onsubmit="return debugSkillsForm(event, this);">
                     @csrf
                     <div class="modal-body">
                         <div class="mb-3">
                             <label class="form-label">Skills</label>
-                            <input type="text" class="form-control" id="skillInput" placeholder="Type skill and press Enter">
+                            <input type="text" class="form-control" id="skillInput"
+                                placeholder="Type skill and press Enter">
                             <small class="text-muted">Press Enter to add skills</small>
                         </div>
                         <div id="skillsList">
-                            @if($user->skills)
-                                @foreach($user->skills as $skill)
+                            @if ($user->skills)
+                                @foreach ($user->skills as $skill)
                                     <span class="info-badge me-2 mb-2 d-inline-flex align-items-center">
                                         {{ $skill }}
                                         <input type="hidden" name="skills[]" value="{{ $skill }}">
-                                        <button type="button" class="btn-close btn-close-sm ms-2" onclick="removeSkill(this)"></button>
+                                        <button type="button" class="btn-close btn-close-sm ms-2"
+                                            onclick="removeSkill(this)"></button>
                                     </span>
                                 @endforeach
                             @endif
@@ -694,21 +718,24 @@
                     <h5 class="modal-title">Edit Interests & Preferences</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <form action="{{ route('profile.update.interests') }}" method="POST" onsubmit="return debugInterestsForm(event, this);">
+                <form action="{{ route('profile.update.interests') }}" method="POST"
+                    onsubmit="return debugInterestsForm(event, this);">
                     @csrf
                     <div class="modal-body">
                         <div class="mb-3">
                             <label class="form-label">Interests & Preferences</label>
-                            <input type="text" class="form-control" id="interestInput" placeholder="Type interest and press Enter">
+                            <input type="text" class="form-control" id="interestInput"
+                                placeholder="Type interest and press Enter">
                             <small class="text-muted">Press Enter to add interests</small>
                         </div>
                         <div id="interestsList">
-                            @if($user->interests)
-                                @foreach($user->interests as $interest)
+                            @if ($user->interests)
+                                @foreach ($user->interests as $interest)
                                     <span class="info-badge me-2 mb-2 d-inline-flex align-items-center">
                                         {{ $interest }}
                                         <input type="hidden" name="interests[]" value="{{ $interest }}">
-                                        <button type="button" class="btn-close btn-close-sm ms-2" onclick="removeInterest(this)"></button>
+                                        <button type="button" class="btn-close btn-close-sm ms-2"
+                                            onclick="removeInterest(this)"></button>
                                     </span>
                                 @endforeach
                             @endif
@@ -754,7 +781,8 @@
                                         <textarea class="form-control" rows="3" name="awards[0][description]"></textarea>
                                     </div>
                                 </div>
-                                <button type="button" class="btn btn-sm btn-outline-danger remove-award" style="display: none;">
+                                <button type="button" class="btn btn-sm btn-outline-danger remove-award"
+                                    style="display: none;">
                                     <i class="bi bi-trash"></i> Remove
                                 </button>
                             </div>
@@ -788,27 +816,33 @@
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Certificate Name</label>
-                                        <input type="text" class="form-control" name="certificates[0][name]" required>
+                                        <input type="text" class="form-control" name="certificates[0][name]"
+                                            required>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Issuer</label>
-                                        <input type="text" class="form-control" name="certificates[0][issuer]" required>
+                                        <input type="text" class="form-control" name="certificates[0][issuer]"
+                                            required>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Issue Date</label>
-                                        <input type="month" class="form-control" name="certificates[0][issue_date]" required>
+                                        <input type="month" class="form-control" name="certificates[0][issue_date]"
+                                            required>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Expiry Date</label>
-                                        <input type="month" class="form-control" name="certificates[0][expiry_date]">
+                                        <input type="month" class="form-control"
+                                            name="certificates[0][expiry_date]">
                                         <small class="text-muted">Leave empty if no expiry</small>
                                     </div>
                                     <div class="col-12 mb-3">
                                         <label class="form-label">Credential ID</label>
-                                        <input type="text" class="form-control" name="certificates[0][credential_id]">
+                                        <input type="text" class="form-control"
+                                            name="certificates[0][credential_id]">
                                     </div>
                                 </div>
-                                <button type="button" class="btn btn-sm btn-outline-danger remove-certificate" style="display: none;">
+                                <button type="button" class="btn btn-sm btn-outline-danger remove-certificate"
+                                    style="display: none;">
                                     <i class="bi bi-trash"></i> Remove
                                 </button>
                             </div>
@@ -850,24 +884,28 @@
                     modal.setAttribute('aria-modal', 'true');
                     modal.setAttribute('role', 'dialog');
                     document.body.classList.add('modal-open');
-                    
+
                     // Add backdrop
                     const backdrop = document.createElement('div');
                     backdrop.className = 'modal-backdrop fade show';
-                    backdrop.onclick = function() { closeModal(modalId); };
+                    backdrop.onclick = function() {
+                        closeModal(modalId);
+                    };
                     document.body.appendChild(backdrop);
-                    
+
                     // Setup close buttons
                     const closeButtons = modal.querySelectorAll('[data-bs-dismiss="modal"], .btn-close');
                     closeButtons.forEach(btn => {
-                        btn.onclick = function() { closeModal(modalId); };
+                        btn.onclick = function() {
+                            closeModal(modalId);
+                        };
                     });
                 }
             } else {
                 alert('Modal not found: ' + modalId);
             }
         }
-        
+
         function closeModal(modalId) {
             const modal = document.getElementById(modalId);
             if (modal) {
@@ -876,7 +914,7 @@
                 modal.removeAttribute('aria-modal');
                 modal.removeAttribute('role');
                 document.body.classList.remove('modal-open');
-                
+
                 const backdrop = document.querySelector('.modal-backdrop');
                 if (backdrop) {
                     backdrop.remove();
@@ -887,56 +925,64 @@
         // Force modal functionality to work
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOM loaded, initializing modals...');
-            
+
             // Wait a bit for Bootstrap to load
             setTimeout(function() {
                 const modalButtons = document.querySelectorAll('[data-bs-toggle="modal"]');
                 console.log('Found modal buttons:', modalButtons.length);
-                
+
                 modalButtons.forEach((button, index) => {
-                    console.log('Setting up button', index, 'for modal:', button.getAttribute('data-bs-target'));
-                    
+                    console.log('Setting up button', index, 'for modal:', button.getAttribute(
+                        'data-bs-target'));
+
                     // Remove any existing event listeners
                     button.removeAttribute('data-bs-toggle');
                     button.removeAttribute('data-bs-target');
-                    
+
                     // Add click event manually
-                    const modalId = button.getAttribute('data-modal-target') || button.getAttribute('data-bs-target');
-                    
+                    const modalId = button.getAttribute('data-modal-target') || button.getAttribute(
+                        'data-bs-target');
+
                     button.addEventListener('click', function(e) {
                         e.preventDefault();
                         e.stopPropagation();
-                        
+
                         console.log('Button clicked, trying to open modal');
-                        
+
                         // Get the modal target from original attribute or set it manually
                         let targetModalId;
                         if (this.textContent.includes('Contact')) {
                             targetModalId = '#contactInfoModal';
                         } else if (this.textContent.includes('About')) {
                             targetModalId = '#aboutMeModal';
-                        } else if (this.textContent.includes('Experience') || this.closest('.d-flex').querySelector('i.bi-briefcase')) {
+                        } else if (this.textContent.includes('Experience') || this.closest(
+                                '.d-flex').querySelector('i.bi-briefcase')) {
                             targetModalId = '#workExperienceModal';
-                        } else if (this.textContent.includes('Education') || this.closest('.d-flex').querySelector('i.bi-mortarboard')) {
+                        } else if (this.textContent.includes('Education') || this.closest(
+                                '.d-flex').querySelector('i.bi-mortarboard')) {
                             targetModalId = '#educationModal';
-                        } else if (this.textContent.includes('Skills') || this.closest('.d-flex').querySelector('i.bi-gear')) {
+                        } else if (this.textContent.includes('Skills') || this.closest(
+                                '.d-flex').querySelector('i.bi-gear')) {
                             targetModalId = '#skillsModal';
-                        } else if (this.textContent.includes('Interests') || this.closest('.d-flex').querySelector('i.bi-heart')) {
+                        } else if (this.textContent.includes('Interests') || this.closest(
+                                '.d-flex').querySelector('i.bi-heart')) {
                             targetModalId = '#interestsModal';
-                        } else if (this.textContent.includes('Awards') || this.closest('.d-flex').querySelector('i.bi-trophy')) {
+                        } else if (this.textContent.includes('Awards') || this.closest(
+                                '.d-flex').querySelector('i.bi-trophy')) {
                             targetModalId = '#awardsModal';
-                        } else if (this.textContent.includes('Certificates') || this.closest('.d-flex').querySelector('i.bi-award')) {
+                        } else if (this.textContent.includes('Certificates') || this
+                            .closest('.d-flex').querySelector('i.bi-award')) {
                             targetModalId = '#certificatesModal';
                         } else if (this.textContent.includes('Test')) {
                             targetModalId = '#aboutMeModal';
                         }
-                        
+
                         console.log('Target modal:', targetModalId);
-                        
+
                         const targetModal = document.querySelector(targetModalId);
                         if (targetModal) {
                             console.log('Modal found, attempting to show...');
-                            
+
                             // Try Bootstrap modal first
                             if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
                                 try {
@@ -957,19 +1003,19 @@
                         }
                     });
                 });
-                
+
                 function showModalManually(modal) {
                     modal.style.display = 'block';
                     modal.classList.add('show');
                     modal.setAttribute('aria-modal', 'true');
                     modal.setAttribute('role', 'dialog');
-                    
+
                     // Add backdrop
                     const backdrop = document.createElement('div');
                     backdrop.className = 'modal-backdrop fade show';
                     backdrop.id = 'manual-backdrop';
                     document.body.appendChild(backdrop);
-                    
+
                     // Add close functionality
                     const closeButtons = modal.querySelectorAll('[data-bs-dismiss="modal"], .btn-close');
                     closeButtons.forEach(btn => {
@@ -977,27 +1023,27 @@
                             hideModalManually(modal);
                         });
                     });
-                    
+
                     // Close on backdrop click
                     backdrop.addEventListener('click', function() {
                         hideModalManually(modal);
                     });
                 }
-                
+
                 function hideModalManually(modal) {
                     modal.style.display = 'none';
                     modal.classList.remove('show');
                     modal.removeAttribute('aria-modal');
                     modal.removeAttribute('role');
-                    
+
                     const backdrop = document.getElementById('manual-backdrop');
                     if (backdrop) {
                         backdrop.remove();
                     }
                 }
-                
+
             }, 500);
-            
+
             // Add test button functionality
             document.getElementById('testModalBtn').addEventListener('click', function() {
                 console.log('Test button clicked');
@@ -1020,7 +1066,7 @@
         document.getElementById('addExperience').addEventListener('click', function() {
             const container = document.getElementById('experienceContainer');
             const newEntry = document.querySelector('.experience-entry').cloneNode(true);
-            
+
             // Update form field names and clear values
             const inputs = newEntry.querySelectorAll('input, textarea');
             inputs.forEach(input => {
@@ -1030,7 +1076,7 @@
                 }
                 input.value = '';
             });
-            
+
             // Show remove button
             newEntry.querySelector('.remove-experience').style.display = 'inline-block';
             container.appendChild(newEntry);
@@ -1048,7 +1094,7 @@
         document.getElementById('addEducation').addEventListener('click', function() {
             const container = document.getElementById('educationContainer');
             const newEntry = document.querySelector('.education-entry').cloneNode(true);
-            
+
             // Update form field names and clear values
             const inputs = newEntry.querySelectorAll('input');
             inputs.forEach(input => {
@@ -1058,7 +1104,7 @@
                 }
                 input.value = '';
             });
-            
+
             // Show remove button
             newEntry.querySelector('.remove-education').style.display = 'inline-block';
             container.appendChild(newEntry);
@@ -1076,7 +1122,7 @@
         document.getElementById('addAward').addEventListener('click', function() {
             const container = document.getElementById('awardsContainer');
             const newEntry = document.querySelector('.award-entry').cloneNode(true);
-            
+
             // Update form field names and clear values
             const inputs = newEntry.querySelectorAll('input, textarea');
             inputs.forEach(input => {
@@ -1086,7 +1132,7 @@
                 }
                 input.value = '';
             });
-            
+
             // Show remove button
             newEntry.querySelector('.remove-award').style.display = 'inline-block';
             container.appendChild(newEntry);
@@ -1104,7 +1150,7 @@
         document.getElementById('addCertificate').addEventListener('click', function() {
             const container = document.getElementById('certificatesContainer');
             const newEntry = document.querySelector('.certificate-entry').cloneNode(true);
-            
+
             // Update form field names and clear values
             const inputs = newEntry.querySelectorAll('input');
             inputs.forEach(input => {
@@ -1114,7 +1160,7 @@
                 }
                 input.value = '';
             });
-            
+
             // Show remove button
             newEntry.querySelector('.remove-certificate').style.display = 'inline-block';
             container.appendChild(newEntry);
@@ -1158,17 +1204,17 @@
         // Debug function for skills form
         function debugSkillsForm(event, form) {
             console.log('Skills form submitted');
-            
+
             const formData = new FormData(form);
             const skillsArray = formData.getAll('skills[]');
-            
+
             console.log('Skills array:', skillsArray);
             console.log('Skills array length:', skillsArray.length);
-            
+
             // Check if there are any skills
             if (skillsArray.length === 0) {
                 console.log('No skills found, adding empty array placeholder');
-                
+
                 // Add a hidden input to ensure the array exists even if empty
                 const hiddenInput = document.createElement('input');
                 hiddenInput.type = 'hidden';
@@ -1176,7 +1222,7 @@
                 hiddenInput.value = '';
                 form.appendChild(hiddenInput);
             }
-            
+
             // Let the form submit normally
             return true;
         }
@@ -1212,20 +1258,20 @@
         // Debug function for interests form
         function debugInterestsForm(event, form) {
             console.log('Interests form submitted');
-            
+
             const formData = new FormData(form);
             const interestsArray = formData.getAll('interests[]');
-            
+
             console.log('Interests array:', interestsArray);
             console.log('Interests array length:', interestsArray.length);
-            
+
             // Always ensure we have an interests field, even if empty
             // Remove any existing interests field that's not an array
             const existingInterests = form.querySelector('input[name="interests"]');
             if (existingInterests) {
                 existingInterests.remove();
             }
-            
+
             // If no interests[], add hidden input to ensure empty array is sent
             if (interestsArray.length === 0) {
                 console.log('No interests found, ensuring empty array is sent');
@@ -1235,7 +1281,7 @@
                 hiddenInput.value = '';
                 form.appendChild(hiddenInput);
             }
-            
+
             // Let the form submit normally
             return true;
         }
@@ -1267,4 +1313,5 @@
         }
     </script>
 </body>
+
 </html>

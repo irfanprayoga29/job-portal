@@ -1,12 +1,10 @@
 <?php
 
-use App\Http\Controllers\UsersController;
-use App\Http\Controllers\LoginController;
-use App\Http\Controllers\SuperUserController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\ResumeController;
+use App\Http\Controllers\SuperUserController;
+use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\DB;
-
 use Illuminate\Support\Facades\Route;
 
 // user
@@ -20,13 +18,13 @@ Route::get('/test', function () {
 // Diagnostic route
 Route::get('/diagnostic', function () {
     try {
-        $jobCount = App\Models\Job::count();
+        $jobCount  = App\Models\Job::count();
         $userCount = App\Models\Users::count();
         return "System Status:<br>" .
-               "Database: Connected to " . DB::connection()->getDatabaseName() . "<br>" .
-               "Jobs in database: " . $jobCount . "<br>" .
-               "Users in database: " . $userCount . "<br>" .
-               "Laravel version: " . app()->version();
+        "Database: Connected to " . DB::connection()->getDatabaseName() . "<br>" .
+        "Jobs in database: " . $jobCount . "<br>" .
+        "Users in database: " . $userCount . "<br>" .
+        "Laravel version: " . app()->version();
     } catch (Exception $e) {
         return "Error: " . $e->getMessage();
     }
@@ -46,7 +44,7 @@ Route::get('/user/register', function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/user/applicant-profile', [UsersController::class, 'profile'])->name('user.profile');
     Route::post('/user/applicant-profile', [UsersController::class, 'updateProfile'])->name('user.profile.update');
-    
+
     // New profile update routes
     Route::post('/user/profile/contact', [UsersController::class, 'updateContact'])->name('profile.update.contact');
     Route::post('/user/profile/about', [UsersController::class, 'updateAbout'])->name('profile.update.about');
@@ -56,7 +54,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/user/profile/interests', [UsersController::class, 'updateInterests'])->name('profile.update.interests');
     Route::post('/user/profile/awards', [UsersController::class, 'updateAwards'])->name('profile.update.awards');
     Route::post('/user/profile/certificates', [UsersController::class, 'updateCertificates'])->name('profile.update.certificates');
-    
+
     // Delete profile item routes
     Route::get('/user/profile/experience/delete/{index}', [UsersController::class, 'deleteWorkExperience'])->name('profile.delete.experience');
     Route::get('/user/profile/education/delete/{index}', [UsersController::class, 'deleteEducation'])->name('profile.delete.education');
@@ -130,7 +128,7 @@ Route::middleware(['auth'])->prefix('superuser')->name('superuser.')->group(func
     Route::put('/jobs/{id}', [JobController::class, 'update'])->name('jobs.update');
     Route::delete('/jobs/{id}', [JobController::class, 'destroy'])->name('jobs.destroy');
     Route::get('/jobs/{id}/applications', [JobController::class, 'jobApplications'])->name('jobs.applications');
-    
+
     // Company profile routes
     Route::get('/profile/edit', [SuperUserController::class, 'editProfile'])->name('profile.edit');
     Route::post('/profile/update', [SuperUserController::class, 'updateProfile'])->name('profile.update');
@@ -144,7 +142,14 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // Temporary test route for profile page (without authentication)
-Route::get('/test-profile', function() {
+Route::get('/test-profile', function () {
     $user = App\Models\Users::first();
     return view('user.applicant-profile', compact('user'));
 })->name('test.profile');
+
+Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
+    // Company profile routes
+    Route::get('/profile/edit', [UsersController::class, 'editProfile'])->name('profile.edit');
+    Route::post('/profile/update', [UsersController::class, 'updateProfile'])->name('profile.update');
+
+});

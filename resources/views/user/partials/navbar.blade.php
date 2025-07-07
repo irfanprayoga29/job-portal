@@ -91,7 +91,8 @@
                     @auth
                         <li class="nav-item dropdown position-relative">
                             <a class="nav-link" href="#" id="userDropdown" onclick="toggleDropdown(event)">
-                                <img src="uploads/profiles/visa.png" class="rounded-circle" style="width: 30px;">
+                                <img src="{{ url(Auth::user()->company_logo) }}" class="rounded-circle"
+                                    style="width: 30px;">
                                 {{ Auth::user()->full_name }} <i class="bi bi-chevron-down"></i>
                             </a>
                             <div class="dropdown-menu dropdown-menu-end shadow" id="userDropdownMenu">
