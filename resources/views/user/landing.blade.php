@@ -170,7 +170,7 @@
                         </div>
                         <h5>Complete Profile</h5>
                         <p class="text-muted mb-3">Make your profile stand out</p>
-                        <a href="#" class="btn btn-outline-primary">Edit Profile</a>
+                        <a href="{{ route('user.profile') }} " class="btn btn-outline-primary">Edit Profile</a>
                     </div>
                 </div>
                 
