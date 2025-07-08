@@ -92,13 +92,40 @@ class Users extends Authenticatable
         return $this->role_id == 1;
     }
 
+    /**
+     * Get the jobs saved by this user
+     */
+    public function savedJobs()
+    {
+        return $this->hasMany(SavedJob::class, 'user_id');
+    }
+
+    /**
+     * Get saved jobs with job details
+     */
+    public function savedJobsWithDetails()
+    {
+        return $this->belongsToMany(Job::class, 'saved_jobs', 'user_id', 'job_id')
+                    ->withTimestamps()
+                    ->withPivot('saved_at')
+                    ->orderByPivot('saved_at', 'desc');
+    }
+
+    /**
+     * Check if user has saved a specific job
+     */
+    public function hasSavedJob($jobId)
+    {
+        return $this->savedJobs()->where('job_id', $jobId)->exists();
+    }
+
     // Get user stats for dashboard
     public function getStatsAttribute()
     {
         if ($this->isApplicant()) {
             return [
                 'applications_sent' => $this->applications()->count(),
-                'saved_jobs' => 0, // Implement saved jobs later
+                'saved_jobs' => $this->savedJobs()->count(),
                 'profile_views' => 0, // Implement profile views later
                 'resumes_uploaded' => $this->resumes()->count()
             ];

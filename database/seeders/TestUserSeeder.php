@@ -27,10 +27,10 @@ class TestUserSeeder extends Seeder
 
         // Create another test user
         Users::create([
-            'full_name' => 'Admin User',
-            'username' => 'admin',
-            'email' => 'admin@example.com',
-            'password' => Hash::make('admin123'),
+            'full_name' => 'Applicant 2 User',
+            'username' => 'applicant2',
+            'email' => 'applicant2@example.com',
+            'password' => Hash::make('applicant123'),
             'date_of_birth' => '1985-05-15',
             'gender' => 'Female',
             'address' => 'Admin Address',

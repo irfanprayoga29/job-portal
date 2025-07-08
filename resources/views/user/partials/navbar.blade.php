@@ -81,14 +81,23 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link" href="{{ route('jobs.index') }}">Jobs</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Companies</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Blog</a></li>
+                @if(Auth::check() && Auth::user()->role_id == 2)
+                    {{-- Company Navigation --}}
+                    <li class="nav-item"><a class="nav-link" href="{{ route('superuser.jobs.index') }}">Manage Jobs</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('superuser.jobs.create') }}">Post Job</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Analytics</a></li>
+                @else
+                    {{-- Default Navigation --}}
+                    <li class="nav-item"><a class="nav-link" href="{{ route('jobs.index') }}">Jobs</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Companies</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Blog</a></li>
+                @endif
             </ul>
 
             <div class="d-flex">
                 <ul class="navbar-nav me-2 mb-2 mb-lg-0">
-                    @auth
+                    @if(Auth::check() && Auth::user()->role_id == 1)
+                        {{-- Applicant/User dropdown --}}
                         <li class="nav-item dropdown position-relative">
                             <a class="nav-link" href="#" id="userDropdown" onclick="toggleDropdown(event)">
                                 <i class="bi bi-person-circle"></i> {{ Auth::user()->full_name }} <i class="bi bi-chevron-down"></i>
@@ -106,6 +115,9 @@
                                 <a class="dropdown-item" href="{{ route('applications.index') }}">
                                     <i class="bi bi-briefcase me-2"></i> My Applications
                                 </a>
+                                <a class="dropdown-item" href="{{ route('saved-jobs.index') }}">
+                                    <i class="bi bi-heart me-2"></i> Saved Jobs
+                                </a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item text-danger" href="#" onclick="logout()">
                                     <i class="bi bi-box-arrow-right me-2"></i> Logout
@@ -115,23 +127,60 @@
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                             @csrf
                         </form>
-                    @endauth
-
-                    @guest
+                    @elseif(Auth::check() && Auth::user()->role_id == 2)
+                        {{-- Company dropdown --}}
+                        <li class="nav-item dropdown position-relative">
+                            <a class="nav-link" href="#" id="companyDropdown" onclick="toggleDropdown(event)">
+                                <i class="bi bi-building"></i> {{ Auth::user()->full_name }} <i class="bi bi-chevron-down"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end shadow" id="companyDropdownMenu">
+                                <a class="dropdown-item" href="{{ route('superuser.landing') }}">
+                                    <i class="bi bi-speedometer2 me-2"></i> Dashboard
+                                </a>
+                                <a class="dropdown-item" href="{{ route('superuser.jobs.index') }}">
+                                    <i class="bi bi-briefcase me-2"></i> Manage Jobs
+                                </a>
+                                <a class="dropdown-item" href="{{ route('superuser.jobs.create') }}">
+                                    <i class="bi bi-plus-circle me-2"></i> Post Job
+                                </a>
+                                <a class="dropdown-item" href="{{ route('superuser.profile.edit') }}">
+                                    <i class="bi bi-gear me-2"></i> Manage Profile
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item text-danger" href="#" onclick="logoutCompany()">
+                                    <i class="bi bi-box-arrow-right me-2"></i> Logout
+                                </a>
+                            </div>
+                        </li>
+                        <form id="logout-form-company" action="{{ route('superuser.logout') }}" method="POST" class="d-none">
+                            @csrf
+                        </form>
+                    @else
+                        {{-- Guest links --}}
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('user.register') }}">Register</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('login') }}">Login</a>
                         </li>
-                    @endguest
+                    @endif
                 </ul>
 
-                <a href="{{ route('superuser.login') }}" class="nav-link">
-                    <button class="btn btn-outline-primary" type="button">
-                        For Company
-                    </button>
-                </a>
+                @if(Auth::check() && Auth::user()->role_id == 2)
+                    {{-- Company Dashboard Button --}}
+                    <a href="{{ route('superuser.landing') }}" class="nav-link me-2">
+                        <button class="btn btn-primary" type="button">
+                            <i class="bi bi-speedometer2"></i> Company Dashboard
+                        </button>
+                    </a>
+                @else
+                    {{-- For Company Login Button --}}
+                    <a href="{{ route('superuser.login') }}" class="nav-link">
+                        <button class="btn btn-outline-primary" type="button">
+                            For Company
+                        </button>
+                    </a>
+                @endif
             </div>
         </div>
     </div>

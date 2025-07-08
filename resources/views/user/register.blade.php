@@ -74,7 +74,7 @@
                     @error('email')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
-                        placeholder="Enter your email" required>
+                        <!-- placeholder="Enter your email" required> -->
                 </div>
 
                 <div class="mb-3">

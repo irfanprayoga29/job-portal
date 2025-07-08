@@ -89,7 +89,7 @@ class JobController extends Controller
         }
 
         $request->validate([
-            'cover_letter' => 'required|string|max:2000',
+            'cover_letter' => 'nullable|string|max:2000',
             'resume_id' => 'nullable|exists:resumes,id',
         ]);
 
@@ -109,16 +109,52 @@ class JobController extends Controller
             $resumeId = $resume->id;
         }
 
-        Application::create([
-            'user_id' => Auth::id(),
-            'job_id' => $id,
-            'resume_id' => $resumeId,
-            'date_submitted' => now(),
-            'status' => false, // Pending
-            'cover_letter' => $request->cover_letter
-        ]);
+        try {
+            // Create the application with all fields
+            $applicationData = [
+                'user_id' => Auth::id(),
+                'job_id' => $id,
+                'resume_id' => $resumeId,
+                'date_submitted' => now(),
+                'status' => false, // Pending
+            ];
 
-        return back()->with('success', 'Application submitted successfully!');
+            // Add cover letter if provided
+            if ($request->filled('cover_letter')) {
+                $applicationData['cover_letter'] = $request->cover_letter;
+            }
+
+            $application = Application::create($applicationData);
+
+            return back()->with('success', 'Application submitted successfully!');
+
+        } catch (\Illuminate\Database\QueryException $e) {
+            // If it's a column error, try without cover_letter
+            if (str_contains($e->getMessage(), 'cover_letter') || str_contains($e->getMessage(), 'no such column')) {
+                \Log::warning('Cover letter column not found, submitting without it: ' . $e->getMessage());
+                
+                try {
+                    $application = Application::create([
+                        'user_id' => Auth::id(),
+                        'job_id' => $id,
+                        'resume_id' => $resumeId,
+                        'date_submitted' => now(),
+                        'status' => false,
+                    ]);
+                    
+                    return back()->with('success', 'Application submitted successfully! (Note: Cover letter was not saved - please contact support if needed)');
+                } catch (\Exception $e2) {
+                    \Log::error('Job application error (retry): ' . $e2->getMessage());
+                    return back()->with('error', 'Failed to submit application. Error: ' . $e2->getMessage());
+                }
+            } else {
+                \Log::error('Job application error: ' . $e->getMessage());
+                return back()->with('error', 'Failed to submit application. Error: ' . $e->getMessage());
+            }
+        } catch (\Exception $e) {
+            \Log::error('Job application error: ' . $e->getMessage());
+            return back()->with('error', 'Failed to submit application. Please try again or contact support.');
+        }
     }
 
     public function myApplications()
@@ -244,29 +280,83 @@ class JobController extends Controller
 
     public function destroy($id)
     {
-        if (!Auth::check() || !Auth::user()->isCompany()) {
-            return redirect()->route('superuser.login');
+        try {
+            if (!Auth::check() || !Auth::user()->isCompany()) {
+                return redirect()->route('superuser.login')
+                    ->with('error', 'Please log in as a company to delete jobs.');
+            }
+
+            // Find job that belongs to this company
+            $job = Job::where('user_id', Auth::id())->find($id);
+            
+            if (!$job) {
+                return back()->with('error', 'Job not found or you do not have permission to delete it.');
+            }
+
+            $jobName = $job->name;
+            $applicationCount = Application::where('job_id', $id)->count();
+            
+            \Log::info("Deleting job {$id} ({$jobName}) with {$applicationCount} applications");
+            
+            // Delete all related data in correct order
+            
+            // 1. Delete applications first
+            Application::where('job_id', $id)->delete();
+            \Log::info("Deleted {$applicationCount} applications");
+            
+            // 2. Detach categories (remove from pivot table)
+            $job->categories()->detach();
+            \Log::info("Detached categories from job");
+            
+            // 3. Finally delete the job itself
+            $deleted = $job->delete();
+            \Log::info("Job deletion result: " . ($deleted ? 'success' : 'failed'));
+            
+            if ($deleted) {
+                if ($applicationCount > 0) {
+                    return back()->with('success', "Job '{$jobName}' and its {$applicationCount} application(s) have been deleted successfully!");
+                } else {
+                    return back()->with('success', "Job '{$jobName}' has been deleted successfully!");
+                }
+            } else {
+                return back()->with('error', "Failed to delete job '{$jobName}'. Please try again.");
+            }
+            
+        } catch (\Exception $e) {
+            \Log::error('Error deleting job: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            return back()->with('error', 'Error deleting job: ' . $e->getMessage());
         }
-
-        $job = Job::where('user_id', Auth::id())->findOrFail($id);
-        $job->delete();
-
-        return back()->with('success', 'Job deleted successfully!');
     }
 
     public function jobApplications($id)
     {
-        if (!Auth::check() || !Auth::user()->isCompany()) {
-            return redirect()->route('superuser.login');
+        try {
+            if (!Auth::check() || !Auth::user()->isCompany()) {
+                return redirect()->route('superuser.login')
+                    ->with('error', 'Please log in as a company to view applications.');
+            }
+
+            // Find job that belongs to this company
+            $job = Job::where('user_id', Auth::id())->find($id);
+            
+            if (!$job) {
+                return redirect()->route('superuser.jobs.index')
+                    ->with('error', 'Job not found or you do not have permission to view its applications.');
+            }
+
+            $applications = Application::with(['user', 'resume'])
+                ->where('job_id', $id)
+                ->orderBy('date_submitted', 'desc')
+                ->paginate(10);
+
+            return view('superuser.applications.index', compact('job', 'applications'));
+            
+        } catch (\Exception $e) {
+            \Log::error('Error viewing job applications: ' . $e->getMessage());
+            return redirect()->route('superuser.jobs.index')
+                ->with('error', 'Error loading applications: ' . $e->getMessage());
         }
-
-        $job = Job::where('user_id', Auth::id())->findOrFail($id);
-        $applications = Application::with(['user'])
-            ->where('job_id', $id)
-            ->orderBy('date_submitted', 'desc')
-            ->paginate(10);
-
-        return view('superuser.applications.index', compact('job', 'applications'));
     }
 
     public function showApplyForm($id)

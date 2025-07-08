@@ -12,8 +12,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('applications', function (Blueprint $table) {
-            $table->unsignedBigInteger('resume_id')->nullable()->after('job_id');
-            $table->foreign('resume_id')->references('id')->on('resumes')->onDelete('set null');
             $table->text('cover_letter')->nullable()->after('resume_id');
         });
     }
@@ -24,8 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('applications', function (Blueprint $table) {
-            $table->dropForeign(['resume_id']);
-            $table->dropColumn(['resume_id', 'cover_letter']);
+            $table->dropColumn('cover_letter');
         });
     }
 };

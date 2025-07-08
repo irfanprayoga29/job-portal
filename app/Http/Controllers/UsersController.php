@@ -251,6 +251,33 @@ class UsersController extends Controller
         return back()->with('success', 'Contact information updated successfully!');
     }
 
+    public function updateGeneralProfile(Request $request)
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
+        $user = Auth::user();
+
+        $validatedData = $request->validate([
+            'full_name' => 'required|string|max:255',
+            'date_of_birth' => 'nullable|date',
+            'address' => 'nullable|string|max:500',
+            'phone' => 'nullable|string|max:20',
+            'linkedin' => 'nullable|url|max:255',
+            'website' => 'nullable|url|max:255',
+        ]);
+
+        // Format date if provided
+        if (isset($validatedData['date_of_birth'])) {
+            $validatedData['date_of_birth'] = Carbon::createFromFormat('Y-m-d', $validatedData['date_of_birth'])->format('Y-m-d');
+        }
+
+        $user->update($validatedData);
+
+        return back()->with('success', 'Profile information updated successfully!');
+    }
+
     public function updateAbout(Request $request)
     {
         if (!Auth::check()) {
@@ -502,10 +529,16 @@ class UsersController extends Controller
 
     public function alternativeLanding()
     {
-        $recentJobs = Job::with('categories', 'company')
-            ->orderBy('created_at', 'desc')
-            ->limit(6)
-            ->get();
+        try {
+            $recentJobs = Job::with('categories', 'company')
+                ->orderBy('created_at', 'desc')
+                ->limit(6)
+                ->get();
+        } catch (\Exception $e) {
+            // If database connection fails, provide empty collection
+            \Log::warning('Database connection failed in alternativeLanding: ' . $e->getMessage());
+            $recentJobs = collect([]);
+        }
             
         return view('user.applicant-employer_landing', compact('recentJobs'));
     }

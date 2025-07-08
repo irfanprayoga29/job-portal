@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             // Check if columns don't exist before adding
+            if (!Schema::hasColumn('users', 'company_name')) {
+                $table->string('company_name')->nullable();
+            }
             if (!Schema::hasColumn('users', 'company_logo')) {
                 $table->string('company_logo')->nullable();
             }
@@ -35,7 +38,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['company_logo', 'company_description', 'company_website', 'phone']);
+            $table->dropColumn(['company_name', 'company_logo', 'company_description', 'company_website', 'phone']);
         });
     }
 };

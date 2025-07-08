@@ -192,7 +192,7 @@
                         </div>
                         <h5>Saved Jobs</h5>
                         <p class="text-muted mb-3">Review your bookmarked positions</p>
-                        <a href="#" class="btn btn-outline-primary">View Saved</a>
+                        <a href="{{ route('saved-jobs.index') }}" class="btn btn-outline-primary">View Saved</a>
                     </div>
                 </div>
             </div>

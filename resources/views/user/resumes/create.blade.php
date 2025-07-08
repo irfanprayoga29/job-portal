@@ -75,7 +75,7 @@
                                         <i class="bi bi-cloud-upload"></i>
                                     </div>
                                     <h6>Click to upload or drag and drop</h6>
-                                    <p class="text-muted mb-0">PDF, DOC, DOCX files only. Max size: 5MB</p>
+                                    <p class="text-muted mb-0">PDF, DOC, DOCX files only. Max size: 2MB</p>
                                 </div>
                                 
                                 <input type="file" name="resume_file" id="resume_file" class="file-input" 
@@ -149,9 +149,9 @@
                     return;
                 }
                 
-                // Validate file size (5MB)
-                if (file.size > 5 * 1024 * 1024) {
-                    alert('File size must be less than 5MB.');
+                // Validate file size (2MB)
+                if (file.size > 2 * 1024 * 1024) {
+                    alert('File size must be less than 2MB.');
                     clearFile();
                     return;
                 }

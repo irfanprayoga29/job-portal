@@ -173,11 +173,13 @@
                                                    class="btn btn-outline-warning btn-action">
                                                     <i class="bi bi-pencil"></i> Edit
                                                 </a>
+                                                
+                                                <!-- Delete Button -->
                                                 <form action="{{ route('superuser.jobs.destroy', $job->id) }}" method="POST" class="d-inline">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-outline-danger btn-action" 
-                                                            onclick="return confirm('Are you sure you want to delete this job?')">
+                                                            onclick="return confirm('Are you sure you want to delete this job? This will also delete all related applications and cannot be undone!')">
                                                         <i class="bi bi-trash"></i> Delete
                                                     </button>
                                                 </form>

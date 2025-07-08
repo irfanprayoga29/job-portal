@@ -58,6 +58,34 @@ class Job extends Model
         return $query->orderBy('date_uploaded', 'desc');
     }
 
+    /**
+     * Users who saved this job
+     */
+    public function savedByUsers()
+    {
+        return $this->hasMany(SavedJob::class, 'job_id');
+    }
+
+    /**
+     * Check if job is saved by a specific user
+     */
+    public function isSavedByUser($userId)
+    {
+        if (!$userId) return false;
+        return $this->savedByUsers()->where('user_id', $userId)->exists();
+    }
+
+    /**
+     * Get users who saved this job with details
+     */
+    public function usersWhoSaved()
+    {
+        return $this->belongsToMany(Users::class, 'saved_jobs', 'job_id', 'user_id')
+                    ->withTimestamps()
+                    ->withPivot('saved_at')
+                    ->orderByPivot('saved_at', 'desc');
+    }
+
     // Format salary
     public function getFormattedSalaryAttribute()
     {

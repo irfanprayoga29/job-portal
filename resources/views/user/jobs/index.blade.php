@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Kerja.in - Browse Jobs</title>
 
     {{-- Style --}}
@@ -94,6 +95,22 @@
             margin-right: 5px;
             margin-bottom: 5px;
             display: inline-block;
+        }
+        
+        .btn-save {
+            transition: all 0.3s ease;
+        }
+        
+        .btn-save.saved {
+            background-color: #FF0B55 !important;
+            color: white !important;
+            border-color: #FF0B55 !important;
+        }
+        
+        .btn-save:not(.saved) {
+            background-color: transparent !important;
+            color: #FF0B55 !important;
+            border-color: #FF0B55 !important;
         }
     </style>
 </head>
@@ -265,9 +282,18 @@
                                                 </small>
                                             </div>
                                             <div class="d-flex gap-2 justify-content-md-end">
-                                                <button class="btn btn-outline-primary btn-sm">
-                                                    <i class="bi bi-heart"></i> Save
-                                                </button>
+                                                @auth
+                                                    <button type="button" 
+                                                            class="btn {{ Auth::user()->hasSavedJob($job->id) ? 'btn-primary' : 'btn-outline-primary' }} btn-sm btn-save {{ Auth::user()->hasSavedJob($job->id) ? 'saved' : '' }}" 
+                                                            onclick="toggleSaveJob({{ $job->id }}, this)">
+                                                        <i class="bi bi-heart{{ Auth::user()->hasSavedJob($job->id) ? '-fill' : '' }}"></i> 
+                                                        {{ Auth::user()->hasSavedJob($job->id) ? 'Saved' : 'Save' }}
+                                                    </button>
+                                                @else
+                                                    <a href="{{ route('login') }}" class="btn btn-outline-primary btn-sm">
+                                                        <i class="bi bi-heart"></i> Save
+                                                    </a>
+                                                @endauth
                                                 <a href="{{ route('jobs.show', $job->id) }}" class="btn btn-apply btn-sm">
                                                     View Details
                                                 </a>
@@ -302,6 +328,77 @@
 
     <!-- Script -->
     @include('user.partials.script')
+    
+    <script>
+        // Toggle save job function
+        function toggleSaveJob(jobId, button) {
+            fetch(`/saved-jobs/toggle/${jobId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update button
+                    if (data.saved) {
+                        button.classList.add('saved');
+                        button.classList.remove('btn-outline-primary');
+                        button.classList.add('btn-primary');
+                        button.innerHTML = '<i class="bi bi-heart-fill"></i> Saved';
+                    } else {
+                        button.classList.remove('saved');
+                        button.classList.remove('btn-primary');
+                        button.classList.add('btn-outline-primary');
+                        button.innerHTML = '<i class="bi bi-heart"></i> Save';
+                    }
+                    
+                    // Show toast notification
+                    showToast(data.message, 'success');
+                } else {
+                    showToast(data.message || 'Error occurred', 'error');
+                    if (data.message === 'Please login to save jobs') {
+                        window.location.href = '/login';
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Error occurred while saving job', 'error');
+            });
+        }
+        
+        // Show toast notification
+        function showToast(message, type) {
+            // Remove existing toasts
+            document.querySelectorAll('.toast').forEach(toast => toast.remove());
+            
+            const toastHtml = `
+                <div class="position-fixed top-0 end-0 p-3" style="z-index: 11; margin-top: 70px;">
+                    <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="toast-header">
+                            <i class="bi bi-${type === 'success' ? 'check-circle text-success' : 'exclamation-triangle text-danger'} me-2"></i>
+                            <strong class="me-auto">${type === 'success' ? 'Success' : 'Error'}</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                        <div class="toast-body">
+                            ${message}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Add new toast
+            document.body.insertAdjacentHTML('beforeend', toastHtml);
+            
+            // Auto-hide after 3 seconds
+            setTimeout(() => {
+                document.querySelectorAll('.toast').forEach(toast => toast.remove());
+            }, 3000);
+        }
+    </script>
 </body>
 
 </html>

@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $job->name }} - {{ $job->company->full_name }} | Kerja.in</title>
 
     {{-- Style --}}
@@ -90,6 +91,28 @@
             border: 1px solid #c3e6cb;
             color: #155724;
         }
+        
+        .btn-save {
+            transition: all 0.3s ease;
+        }
+        
+        .btn-save.saved {
+            background-color: #fff !important;
+            color: #FF0B55 !important;
+            border-color: #fff !important;
+        }
+        
+        .btn-save:not(.saved) {
+            background-color: transparent !important;
+            color: #fff !important;
+            border-color: #fff !important;
+        }
+        
+        .btn-save:hover {
+            background-color: #fff !important;
+            color: #FF0B55 !important;
+            border-color: #fff !important;
+        }
     </style>
 </head>
 
@@ -137,9 +160,19 @@
                             <i class="bi bi-box-arrow-in-right"></i> Login to Apply
                         </a>
                     @endauth
-                    <button class="btn btn-outline-light ms-2">
-                        <i class="bi bi-heart"></i> Save Job
-                    </button>
+                    
+                    @auth
+                        <button type="button" 
+                                class="btn {{ Auth::user()->hasSavedJob($job->id) ? 'btn-light' : 'btn-outline-light' }} ms-2 btn-save {{ Auth::user()->hasSavedJob($job->id) ? 'saved' : '' }}" 
+                                onclick="toggleSaveJob({{ $job->id }}, this)">
+                            <i class="bi bi-heart{{ Auth::user()->hasSavedJob($job->id) ? '-fill' : '' }}"></i> 
+                            {{ Auth::user()->hasSavedJob($job->id) ? 'Saved' : 'Save Job' }}
+                        </button>
+                    @else
+                        <a href="{{ route('login') }}" class="btn btn-outline-light ms-2">
+                            <i class="bi bi-heart"></i> Save Job
+                        </a>
+                    @endauth
                 </div>
             </div>
         </div>
@@ -331,9 +364,9 @@
                         </div>
                         
                         <div class="mb-3">
-                            <label for="cover_letter" class="form-label">Cover Letter *</label>
+                            <label for="cover_letter" class="form-label">Cover Letter</label>
                             <textarea class="form-control" id="cover_letter" name="cover_letter" rows="8" 
-                                      placeholder="Tell us why you're interested in this position and what makes you a great fit..." required></textarea>
+                                      placeholder="Tell us why you're interested in this position and what makes you a great fit..."></textarea>
                             <div class="form-text">Write a compelling cover letter to increase your chances of being selected.</div>
                         </div>
                         
@@ -400,6 +433,75 @@
         setTimeout(function() {
             $('.toast').toast('hide');
         }, 5000);
+        
+        // Toggle save job function
+        function toggleSaveJob(jobId, button) {
+            fetch(`/saved-jobs/toggle/${jobId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update button
+                    if (data.saved) {
+                        button.classList.add('saved');
+                        button.classList.remove('btn-outline-light');
+                        button.classList.add('btn-light');
+                        button.innerHTML = '<i class="bi bi-heart-fill"></i> Saved';
+                    } else {
+                        button.classList.remove('saved');
+                        button.classList.remove('btn-light');
+                        button.classList.add('btn-outline-light');
+                        button.innerHTML = '<i class="bi bi-heart"></i> Save Job';
+                    }
+                    
+                    // Show toast notification
+                    showToast(data.message, 'success');
+                } else {
+                    showToast(data.message || 'Error occurred', 'error');
+                    if (data.message === 'Please login to save jobs') {
+                        window.location.href = '/login';
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Error occurred while saving job', 'error');
+            });
+        }
+        
+        // Show toast notification
+        function showToast(message, type) {
+            const toastHtml = `
+                <div class="position-fixed top-0 end-0 p-3" style="z-index: 11; margin-top: 70px;">
+                    <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="toast-header">
+                            <i class="bi bi-${type === 'success' ? 'check-circle text-success' : 'exclamation-triangle text-danger'} me-2"></i>
+                            <strong class="me-auto">${type === 'success' ? 'Success' : 'Error'}</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                        <div class="toast-body">
+                            ${message}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Remove existing toasts
+            document.querySelectorAll('.toast').forEach(toast => toast.remove());
+            
+            // Add new toast
+            document.body.insertAdjacentHTML('beforeend', toastHtml);
+            
+            // Auto-hide after 3 seconds
+            setTimeout(() => {
+                document.querySelectorAll('.toast').forEach(toast => toast.remove());
+            }, 3000);
+        }
     </script>
 </body>
 

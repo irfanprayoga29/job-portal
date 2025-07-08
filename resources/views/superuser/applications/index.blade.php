@@ -180,7 +180,7 @@
                                                     @if($application->resume)
                                                         <div class="mt-3">
                                                             <h6 class="fw-bold">Resume:</h6>
-                                                            <a href="{{ route('resumes.download', $application->resume->id) }}" 
+                                                            <a href="{{ route('applications.resume.download', $application->id) }}" 
                                                                class="btn btn-sm btn-outline-primary" target="_blank">
                                                                 <i class="bi bi-download"></i> {{ $application->resume->title }}
                                                             </a>
@@ -290,7 +290,7 @@
                                                 </p>
                                                 @if($application->resume)
                                                     <p><strong>Resume:</strong>
-                                                        <a href="{{ route('resumes.download', $application->resume->id) }}" 
+                                                        <a href="{{ route('applications.resume.download', $application->id) }}" 
                                                            class="btn btn-sm btn-outline-primary" target="_blank">
                                                             <i class="bi bi-download"></i> {{ $application->resume->title }}
                                                         </a>

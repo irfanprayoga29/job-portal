@@ -145,8 +145,8 @@
                     </div>
                 </div>
                 <div class="col-md-4 text-end">
-                    <button class="btn btn-light btn-lg" type="button" onclick="openModal('contactInfoModal')">
-                        <i class="bi bi-pencil me-2"></i>Edit Contact
+                    <button class="btn btn-light btn-lg" type="button" onclick="openModal('profileEditModal')">
+                        <i class="bi bi-pencil me-2"></i>Edit Profile
                     </button>
                 </div>
             </div>
@@ -155,7 +155,7 @@
 
     {{-- Main Content --}}
     <div class="container my-5">
-        {{-- Debug Test Button --}}
+        <!-- {{-- Debug Test Button --}}
         <div class="alert alert-info">
             <button type="button" class="btn btn-primary" onclick="alert('Button works! Checking modals...')">
                 Test Click
@@ -163,7 +163,7 @@
             <button type="button" class="btn btn-success" id="testModalBtn">
                 Test Modal Function
             </button>
-            <small class="ms-3">Click these buttons to test functionality</small>
+            <small class="ms-3">Click these buttons to test functionality</small> -->
         </div>
 
         {{-- Success/Error Messages --}}
@@ -483,33 +483,66 @@
         </div>
     </div>
 
-    {{-- Contact Info Modal --}}
-    <div class="modal fade" id="contactInfoModal" tabindex="-1">
-        <div class="modal-dialog">
+    {{-- Profile Edit Modal --}}
+    <div class="modal fade" id="profileEditModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Edit Contact Information</h5>
+                    <h5 class="modal-title">Edit Profile Information</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="{{ route('profile.update.contact') }}" method="POST">
+                <form action="{{ route('profile.update.general') }}" method="POST">
                     @csrf
                     <div class="modal-body">
-                        <div class="mb-3">
-                            <label class="form-label">Phone Number</label>
-                            <input type="text" class="form-control" name="phone" value="{{ $user->phone }}">
+                        {{-- Personal Information --}}
+                        <h6 class="text-muted mb-3">Personal Information</h6>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Full Name *</label>
+                                <input type="text" class="form-control" name="full_name" value="{{ $user->full_name ?? '' }}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Date of Birth</label>
+                                <input type="date" class="form-control" name="date_of_birth" value="{{ $user->date_of_birth ? $user->date_of_birth->format('Y-m-d') : '' }}">
+                            </div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">LinkedIn</label>
-                            <input type="url" class="form-control" name="linkedin" value="{{ $user->linkedin }}">
+                            <label class="form-label">Address</label>
+                            <textarea class="form-control" rows="2" name="address" placeholder="Enter your full address">{{ $user->address ?? '' }}</textarea>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label">Website/Portfolio</label>
-                            <input type="url" class="form-control" name="website" value="{{ $user->website }}">
+                        
+                        {{-- Contact Information --}}
+                        <h6 class="text-muted mb-3 mt-4">Contact Information</h6>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Phone Number</label>
+                                <input type="text" class="form-control" name="phone" value="{{ $user->phone ?? '' }}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Email Address</label>
+                                <input type="email" class="form-control" name="email" value="{{ $user->email ?? '' }}" readonly>
+                                <small class="text-muted">Email cannot be changed</small>
+                            </div>
+                        </div>
+                        
+                        {{-- Social Links --}}
+                        <h6 class="text-muted mb-3 mt-4">Social Links</h6>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">LinkedIn Profile</label>
+                                <input type="url" class="form-control" name="linkedin" value="{{ $user->linkedin ?? '' }}" placeholder="https://linkedin.com/in/yourprofile">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Website/Portfolio</label>
+                                <input type="url" class="form-control" name="website" value="{{ $user->website ?? '' }}" placeholder="https://yourwebsite.com">
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-lg me-2"></i>Save Changes
+                        </button>
                     </div>
                 </form>
             </div>
@@ -911,9 +944,7 @@
                         
                         // Get the modal target from original attribute or set it manually
                         let targetModalId;
-                        if (this.textContent.includes('Contact')) {
-                            targetModalId = '#contactInfoModal';
-                        } else if (this.textContent.includes('About')) {
+                        if (this.textContent.includes('About')) {
                             targetModalId = '#aboutMeModal';
                         } else if (this.textContent.includes('Experience') || this.closest('.d-flex').querySelector('i.bi-briefcase')) {
                             targetModalId = '#workExperienceModal';

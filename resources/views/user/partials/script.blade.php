@@ -13,12 +13,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <!-- Custom JS -->
 <script>
-// Simple dropdown toggle function
+// Enhanced dropdown toggle function
 function toggleDropdown(event) {
     event.preventDefault();
     event.stopPropagation();
     
-    const dropdownMenu = document.getElementById('userDropdownMenu');
+    // Find the dropdown menu related to the clicked element
+    const clickedItem = event.target.closest('.nav-item');
+    const dropdownMenu = clickedItem ? clickedItem.querySelector('.dropdown-menu') : null;
+    
     if (dropdownMenu) {
         if (dropdownMenu.classList.contains('show')) {
             dropdownMenu.classList.remove('show');
@@ -41,11 +44,19 @@ document.addEventListener('click', function(event) {
     }
 });
 
-// Logout function
+// Logout function for applicants
 function logout() {
     event.preventDefault();
     if (confirm('Are you sure you want to logout?')) {
         document.getElementById('logout-form').submit();
+    }
+}
+
+// Logout function for companies
+function logoutCompany() {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        document.getElementById('logout-form-company').submit();
     }
 }
 
