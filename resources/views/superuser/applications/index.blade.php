@@ -207,10 +207,18 @@
                                             </div>
                                             <div class="d-flex gap-2 justify-content-md-end">
                                                 @if(!$application->status)
-                                                    <form action="#" method="POST" class="d-inline">
+                                                    <form action="{{ route('superuser.applications.approve', $application->id) }}" method="POST" class="d-inline">
                                                         @csrf
-                                                        <button type="submit" class="btn btn-success btn-sm">
+                                                        <button type="submit" class="btn btn-success btn-sm" 
+                                                                onclick="return confirm('Are you sure you want to approve this application?')">
                                                             <i class="bi bi-check"></i> Approve
+                                                        </button>
+                                                    </form>
+                                                    <form action="{{ route('superuser.applications.reject', $application->id) }}" method="POST" class="d-inline">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-danger btn-sm" 
+                                                                onclick="return confirm('Are you sure you want to reject this application?')">
+                                                            <i class="bi bi-x"></i> Reject
                                                         </button>
                                                     </form>
                                                 @endif
@@ -335,6 +343,30 @@
 
     <!-- Script -->
     @include('superuser.partials.script')
+    
+    <script>
+        // Debug: Log approve/reject button clicks
+        document.addEventListener('DOMContentLoaded', function() {
+            const approveForms = document.querySelectorAll('form[action*="approve"]');
+            const rejectForms = document.querySelectorAll('form[action*="reject"]');
+            
+            approveForms.forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    console.log('Approve form submitted:', form.action);
+                    const applicationId = form.action.split('/').pop().split('?')[0];
+                    console.log('Application ID:', applicationId);
+                });
+            });
+            
+            rejectForms.forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    console.log('Reject form submitted:', form.action);
+                    const applicationId = form.action.split('/').pop().split('?')[0];
+                    console.log('Application ID:', applicationId);
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>

@@ -147,6 +147,8 @@ Route::middleware(['auth'])->prefix('superuser')->name('superuser.')->group(func
     Route::put('/jobs/{id}', [JobController::class, 'update'])->name('jobs.update');
     Route::delete('/jobs/{id}', [JobController::class, 'destroy'])->name('jobs.destroy');
     Route::get('/jobs/{id}/applications', [JobController::class, 'jobApplications'])->name('jobs.applications');
+    Route::post('/applications/{application}/approve', [JobController::class, 'approveApplication'])->name('applications.approve');
+    Route::post('/applications/{application}/reject', [JobController::class, 'rejectApplication'])->name('applications.reject');
     
     // Company profile routes
     Route::get('/profile/edit', [SuperUserController::class, 'editProfile'])->name('profile.edit');
@@ -204,7 +206,55 @@ Route::get('/test-resume/{id}', function($id) {
     }
 });
 
-// Debug route for job applications (temporary)
+// Debug route for application status testing
+Route::get('/debug/application-status/{id?}', function($id = null) {
+    if ($id) {
+        $app = App\Models\Application::find($id);
+        if ($app) {
+            return [
+                'application_id' => $app->id,
+                'current_status' => $app->status,
+                'status_type' => gettype($app->status),
+                'is_true' => $app->status === true,
+                'is_false' => $app->status === false,
+                'status_cast' => $app->status ? 'true' : 'false'
+            ];
+        }
+        return ['error' => 'Application not found'];
+    }
+    
+    $apps = App\Models\Application::take(5)->get();
+    return $apps->map(function($app) {
+        return [
+            'id' => $app->id,
+            'status' => $app->status,
+            'status_type' => gettype($app->status)
+        ];
+    });
+});
+
+// Test route for updating application status
+Route::get('/debug/update-application/{id}', function($id) {
+    $app = App\Models\Application::find($id);
+    if ($app) {
+        $oldStatus = $app->status;
+        $app->status = true;
+        $saved = $app->save();
+        $newStatus = $app->fresh()->status;
+        
+        return [
+            'application_id' => $id,
+            'old_status' => $oldStatus,
+            'save_result' => $saved,
+            'new_status' => $newStatus,
+            'success' => $newStatus === true
+        ];
+    }
+    return ['error' => 'Application not found'];
+});
+
+// Test route for approve method (GET version for easy testing)
+Route::get('/debug/test-approve/{id}', [JobController::class, 'approveApplication'])->middleware('auth');
 Route::get('/debug-job/{id}', function($id) {
     try {
         $info = [];
@@ -354,4 +404,17 @@ Route::get('/debug-saved-jobs', function () {
     } catch (\Exception $e) {
         return "Error: " . $e->getMessage() . "<br><br>Trace: " . $e->getTraceAsString();
     }
+});
+
+// Debug route to test if approve method is being called
+Route::any('/debug/test-approve-method/{id}', function($id) {
+    \Log::info("Debug route called for application {$id}");
+    return response()->json([
+        'message' => 'Debug route called',
+        'application_id' => $id,
+        'method' => request()->method(),
+        'user_authenticated' => auth()->check(),
+        'user_id' => auth()->id(),
+        'user_role' => auth()->check() ? auth()->user()->role_id : null
+    ]);
 });

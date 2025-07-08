@@ -375,4 +375,95 @@ class JobController extends Controller
         
         return view('user.apply_dynamic', compact('job'));
     }
+
+    public function approveApplication($id)
+    {
+        \Log::info("approveApplication method called with ID: {$id}");
+        \Log::info("Current user ID: " . (Auth::check() ? Auth::id() : 'not authenticated'));
+        \Log::info("Current user role: " . (Auth::check() ? Auth::user()->role_id : 'not authenticated'));
+        
+        try {
+            // Check if user is authenticated and is a company
+            if (!Auth::check() || Auth::user()->role_id !== 2) {
+                \Log::warning("Authentication/authorization failed");
+                return redirect()->route('user.login')
+                    ->with('error', 'Please log in as a company to approve applications.');
+            }
+
+            // Find the application
+            $application = Application::with(['job', 'user'])->findOrFail($id);
+            \Log::info("Found application {$id} for job {$application->job_id}");
+            
+            // Check if the authenticated user owns the job
+            if ($application->job->company_id !== Auth::id()) {
+                \Log::warning("User " . Auth::id() . " tried to approve application for job owned by " . $application->job->company_id);
+                return redirect()->back()
+                    ->with('error', 'You do not have permission to approve this application.');
+            }
+
+            // Update the application status
+            \Log::info("Approving application {$id}. Current status: " . ($application->status ? 'true' : 'false'));
+            
+            // Try multiple approaches to ensure the status is updated
+            $application->status = true;
+            $saved = $application->save();
+            
+            // Alternative approach using update method
+            if (!$saved) {
+                \Log::warning("Standard save failed, trying update method");
+                $updated = $application->update(['status' => true]);
+                \Log::info("Update method result: " . ($updated ? 'success' : 'failed'));
+            }
+            
+            // Verify the change was saved
+            $freshApplication = $application->fresh();
+            \Log::info("New status after save: " . ($freshApplication->status ? 'true' : 'false'));
+            
+            if (!$freshApplication->status) {
+                \Log::error("Status update failed - status is still false");
+                return redirect()->back()
+                    ->with('error', 'Failed to update application status. Please try again.');
+            }
+
+            return redirect()->back()
+                ->with('success', 'Application approved successfully!');
+                
+        } catch (\Exception $e) {
+            \Log::error('Error approving application: ' . $e->getMessage());
+            return redirect()->back()
+                ->with('error', 'Error approving application: ' . $e->getMessage());
+        }
+    }
+
+    public function rejectApplication($id)
+    {
+        try {
+            // Check if user is authenticated and is a company
+            if (!Auth::check() || Auth::user()->role_id !== 2) {
+                return redirect()->route('user.login')
+                    ->with('error', 'Please log in as a company to reject applications.');
+            }
+
+            // Find the application
+            $application = Application::with(['job', 'user'])->findOrFail($id);
+            
+            // Check if the authenticated user owns the job
+            if ($application->job->company_id !== Auth::id()) {
+                return redirect()->back()
+                    ->with('error', 'You do not have permission to reject this application.');
+            }
+
+            // Update the application status (you might want to add a separate rejected status)
+            $application->status = false; // Keep as false for pending/rejected
+            $application->save();
+
+            return redirect()->back()
+                ->with('success', 'Application rejected successfully!');
+                
+        } catch (\Exception $e) {
+            \Log::error('Error rejecting application: ' . $e->getMessage());
+            return redirect()->back()
+                ->with('error', 'Error rejecting application: ' . $e->getMessage());
+        }
+    }
 }
