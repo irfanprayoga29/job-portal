@@ -142,7 +142,7 @@
                         </div>
 
                         <div class="mt-4">
-                            <h4>Quick Actions</h4>
+                            <!-- <h4>Quick Actions</h4>
                             <div class="btn-group" role="group">
                                 <button type="button" class="btn btn-primary">
                                     <i class="bi bi-plus-circle"></i> Post New Job
@@ -153,7 +153,7 @@
                                 <button type="button" class="btn btn-outline-secondary">
                                     <i class="bi bi-people"></i> View Applicants
                                 </button>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>

@@ -134,6 +134,15 @@
             @endif
 
             @if($applications->count() > 0)
+                <!-- Debug Info -->
+                <div class="alert alert-info">
+                    <strong>Debug Info:</strong> Found {{ $applications->count() }} applications for Job "{{ $job->name }}" (ID: {{ $job->id }})
+                    <br>Applications IDs: 
+                    @foreach($applications as $app)
+                        {{ $app->id }} (Status: {{ $app->status ? 'approved' : 'pending' }}){{ !$loop->last ? ', ' : '' }}
+                    @endforeach
+                </div>
+                
                 <div class="row">
                     @foreach($applications as $application)
                         <div class="col-12">
@@ -206,21 +215,30 @@
                                                 @endif
                                             </div>
                                             <div class="d-flex gap-2 justify-content-md-end">
+                                                <!-- Debug info -->
+                                                <small class="text-muted d-block w-100 mb-2">
+                                                    Debug: App ID: {{ $application->id }}, Status: {{ $application->status ? 'true' : 'false' }}
+                                                </small>
+                                                
                                                 @if(!$application->status)
-                                                    <form action="{{ route('superuser.applications.approve', $application->id) }}" method="POST" class="d-inline">
+                                                    <form action="{{ route('superuser.applications.approve', $application->id) }}" method="POST" class="d-inline me-1">
                                                         @csrf
                                                         <button type="submit" class="btn btn-success btn-sm" 
-                                                                onclick="return confirm('Are you sure you want to approve this application?')">
+                                                                onclick="return confirm('Are you sure you want to approve this application?')"
+                                                                style="display: inline-block !important; visibility: visible !important;">
                                                             <i class="bi bi-check"></i> Approve
                                                         </button>
                                                     </form>
-                                                    <form action="{{ route('superuser.applications.reject', $application->id) }}" method="POST" class="d-inline">
+                                                    <form action="{{ route('superuser.applications.reject', $application->id) }}" method="POST" class="d-inline me-1">
                                                         @csrf
                                                         <button type="submit" class="btn btn-danger btn-sm" 
-                                                                onclick="return confirm('Are you sure you want to reject this application?')">
+                                                                onclick="return confirm('Are you sure you want to reject this application?')"
+                                                                style="display: inline-block !important; visibility: visible !important;">
                                                             <i class="bi bi-x"></i> Reject
                                                         </button>
                                                     </form>
+                                                @else
+                                                    <small class="text-success">Application already approved</small>
                                                 @endif
                                                 <button class="btn btn-outline-primary btn-sm" 
                                                         data-bs-toggle="modal" data-bs-target="#candidateModal{{ $application->id }}">

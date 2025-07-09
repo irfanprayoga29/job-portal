@@ -255,6 +255,11 @@ Route::get('/debug/update-application/{id}', function($id) {
 
 // Test route for approve method (GET version for easy testing)
 Route::get('/debug/test-approve/{id}', [JobController::class, 'approveApplication'])->middleware('auth');
+
+// Test page for approval
+Route::get('/test-approve', function() {
+    return view('test-approve');
+})->middleware('auth');
 Route::get('/debug-job/{id}', function($id) {
     try {
         $info = [];

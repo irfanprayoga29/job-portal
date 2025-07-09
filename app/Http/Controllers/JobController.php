@@ -395,8 +395,8 @@ class JobController extends Controller
             \Log::info("Found application {$id} for job {$application->job_id}");
             
             // Check if the authenticated user owns the job
-            if ($application->job->company_id !== Auth::id()) {
-                \Log::warning("User " . Auth::id() . " tried to approve application for job owned by " . $application->job->company_id);
+            if ($application->job->user_id !== Auth::id()) {
+                \Log::warning("User " . Auth::id() . " tried to approve application for job owned by " . $application->job->user_id);
                 return redirect()->back()
                     ->with('error', 'You do not have permission to approve this application.');
             }
@@ -448,7 +448,7 @@ class JobController extends Controller
             $application = Application::with(['job', 'user'])->findOrFail($id);
             
             // Check if the authenticated user owns the job
-            if ($application->job->company_id !== Auth::id()) {
+            if ($application->job->user_id !== Auth::id()) {
                 return redirect()->back()
                     ->with('error', 'You do not have permission to reject this application.');
             }
