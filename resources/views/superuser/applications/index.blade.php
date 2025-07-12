@@ -54,9 +54,14 @@
             color: #856404;
         }
         
-        .status-approved {
+        .status-accepted {
             background: #d4edda;
             color: #155724;
+        }
+        
+        .status-declined {
+            background: #f8d7da;
+            color: #721c24;
         }
         
         .job-info-card {
@@ -134,14 +139,14 @@
             @endif
 
             @if($applications->count() > 0)
-                <!-- Debug Info -->
+                <!-- Debug Info
                 <div class="alert alert-info">
                     <strong>Debug Info:</strong> Found {{ $applications->count() }} applications for Job "{{ $job->name }}" (ID: {{ $job->id }})
                     <br>Applications IDs: 
                     @foreach($applications as $app)
                         {{ $app->id }} (Status: {{ $app->status ? 'approved' : 'pending' }}){{ !$loop->last ? ', ' : '' }}
                     @endforeach
-                </div>
+                </div> -->
                 
                 <div class="row">
                     @foreach($applications as $application)
@@ -204,9 +209,13 @@
                                         </div>
                                         <div class="col-md-4 text-md-end">
                                             <div class="mb-3">
-                                                @if($application->status)
-                                                    <span class="status-badge status-approved">
-                                                        <i class="bi bi-check-circle"></i> Approved
+                                                @if($application->status === 'accepted')
+                                                    <span class="status-badge status-accepted">
+                                                        <i class="bi bi-check-circle"></i> Accepted
+                                                    </span>
+                                                @elseif($application->status === 'declined')
+                                                    <span class="status-badge status-declined">
+                                                        <i class="bi bi-x-circle"></i> Declined
                                                     </span>
                                                 @else
                                                     <span class="status-badge status-pending">
@@ -215,12 +224,12 @@
                                                 @endif
                                             </div>
                                             <div class="d-flex gap-2 justify-content-md-end">
-                                                <!-- Debug info -->
+                                                <!-- Debug info
                                                 <small class="text-muted d-block w-100 mb-2">
-                                                    Debug: App ID: {{ $application->id }}, Status: {{ $application->status ? 'true' : 'false' }}
-                                                </small>
+                                                    Debug: App ID: {{ $application->id }}, Status: {{ $application->status }}
+                                                </small> -->
                                                 
-                                                @if(!$application->status)
+                                                @if($application->status === 'pending')
                                                     <form action="{{ route('superuser.applications.approve', $application->id) }}" method="POST" class="d-inline me-1">
                                                         @csrf
                                                         <button type="submit" class="btn btn-success btn-sm" 
@@ -237,8 +246,10 @@
                                                             <i class="bi bi-x"></i> Reject
                                                         </button>
                                                     </form>
+                                                @elseif($application->status === 'accepted')
+                                                    <small class="text-success">Application accepted</small>
                                                 @else
-                                                    <small class="text-success">Application already approved</small>
+                                                    <small class="text-danger">Application declined</small>
                                                 @endif
                                                 <button class="btn btn-outline-primary btn-sm" 
                                                         data-bs-toggle="modal" data-bs-target="#candidateModal{{ $application->id }}">

@@ -402,25 +402,25 @@ class JobController extends Controller
             }
 
             // Update the application status
-            \Log::info("Approving application {$id}. Current status: " . ($application->status ? 'true' : 'false'));
+            \Log::info("Approving application {$id}. Current status: {$application->status}");
             
-            // Try multiple approaches to ensure the status is updated
-            $application->status = true;
+            // Update status to accepted
+            $application->status = Application::STATUS_ACCEPTED;
             $saved = $application->save();
             
             // Alternative approach using update method
             if (!$saved) {
                 \Log::warning("Standard save failed, trying update method");
-                $updated = $application->update(['status' => true]);
+                $updated = $application->update(['status' => Application::STATUS_ACCEPTED]);
                 \Log::info("Update method result: " . ($updated ? 'success' : 'failed'));
             }
             
             // Verify the change was saved
             $freshApplication = $application->fresh();
-            \Log::info("New status after save: " . ($freshApplication->status ? 'true' : 'false'));
+            \Log::info("New status after save: {$freshApplication->status}");
             
-            if (!$freshApplication->status) {
-                \Log::error("Status update failed - status is still false");
+            if ($freshApplication->status !== Application::STATUS_ACCEPTED) {
+                \Log::error("Status update failed - status is still {$freshApplication->status}");
                 return redirect()->back()
                     ->with('error', 'Failed to update application status. Please try again.');
             }
@@ -453,9 +453,12 @@ class JobController extends Controller
                     ->with('error', 'You do not have permission to reject this application.');
             }
 
-            // Update the application status (you might want to add a separate rejected status)
-            $application->status = false; // Keep as false for pending/rejected
+            // Update the application status to declined
+            \Log::info("Rejecting application {$id}. Current status: {$application->status}");
+            $application->status = Application::STATUS_DECLINED;
             $application->save();
+
+            \Log::info("Application {$id} status updated to: {$application->fresh()->status}");
 
             return redirect()->back()
                 ->with('success', 'Application rejected successfully!');

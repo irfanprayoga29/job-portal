@@ -41,12 +41,12 @@
             color: #856404;
         }
         
-        .status-approved {
+        .status-accepted {
             background: #d4edda;
             color: #155724;
         }
         
-        .status-rejected {
+        .status-declined {
             background: #f8d7da;
             color: #721c24;
         }
@@ -151,9 +151,13 @@
                                         </div>
                                         <div class="col-md-4 text-md-end">
                                             <div class="mb-3">
-                                                @if($application->status)
-                                                    <span class="status-badge status-approved">
-                                                        <i class="bi bi-check-circle"></i> Approved
+                                                @if($application->status === 'accepted')
+                                                    <span class="status-badge status-accepted">
+                                                        <i class="bi bi-check-circle"></i> Accepted
+                                                    </span>
+                                                @elseif($application->status === 'declined')
+                                                    <span class="status-badge status-declined">
+                                                        <i class="bi bi-x-circle"></i> Declined
                                                     </span>
                                                 @else
                                                     <span class="status-badge status-pending">
@@ -198,8 +202,10 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <strong>Status:</strong> 
-                                                @if($application->status)
-                                                    <span class="text-success">Approved</span>
+                                                @if($application->status === 'accepted')
+                                                    <span class="text-success">Accepted</span>
+                                                @elseif($application->status === 'declined')
+                                                    <span class="text-danger">Declined</span>
                                                 @else
                                                     <span class="text-warning">Pending Review</span>
                                                 @endif

@@ -21,8 +21,23 @@ class Application extends Model
 
     protected $casts = [
         'date_submitted' => 'date',
-        'status' => 'boolean'
+        'status' => 'string'
     ];
+
+    // Status constants
+    const STATUS_PENDING = 'pending';
+    const STATUS_ACCEPTED = 'accepted';
+    const STATUS_DECLINED = 'declined';
+
+    // Get all available status options
+    public static function getStatusOptions()
+    {
+        return [
+            self::STATUS_PENDING => 'Pending Review',
+            self::STATUS_ACCEPTED => 'Accepted',
+            self::STATUS_DECLINED => 'Declined'
+        ];
+    }
 
     // Relationship with User (Applicant)
     public function user()
@@ -45,7 +60,44 @@ class Application extends Model
     // Scope for pending applications
     public function scopePending($query)
     {
-        return $query->where('status', false);
+        return $query->where('status', self::STATUS_PENDING);
+    }
+
+    // Scope for accepted applications
+    public function scopeAccepted($query)
+    {
+        return $query->where('status', self::STATUS_ACCEPTED);
+    }
+
+    // Scope for declined applications
+    public function scopeDeclined($query)
+    {
+        return $query->where('status', self::STATUS_DECLINED);
+    }
+
+    // Check if application is pending
+    public function isPending()
+    {
+        return $this->status === self::STATUS_PENDING;
+    }
+
+    // Check if application is accepted
+    public function isAccepted()
+    {
+        return $this->status === self::STATUS_ACCEPTED;
+    }
+
+    // Check if application is declined
+    public function isDeclined()
+    {
+        return $this->status === self::STATUS_DECLINED;
+    }
+
+    // Get status label for display
+    public function getStatusLabelAttribute()
+    {
+        $options = self::getStatusOptions();
+        return $options[$this->status] ?? $this->status;
     }
 
     // Scope for approved applications
