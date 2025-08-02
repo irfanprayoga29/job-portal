@@ -52,7 +52,8 @@ A comprehensive job portal application built with Laravel 12 that connects job s
 ## 🚀 **Live Demo**
 
 The application is deployed and accessible at:
-**🌐 [https://job-portal-production-8b2c.up.railway.app](https://job-portal-production-8b2c.up.railway.app)**
+**🌐 [https://job-portal-fp.host1.uno/](https://job-portal-fp.host1.uno/)**
+
 
 ## 📋 **Requirements**
 
