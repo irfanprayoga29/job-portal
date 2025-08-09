@@ -46,6 +46,13 @@
                 Explore thousands of job opportunities from top companies
             </p>
 
+            {{-- Friendly greeting link --}}
+            <div class="mb-4">
+                <a href="/halo-kamu" class="btn btn-outline-info btn-sm">
+                    <i class="bi bi-heart"></i> Halo Kamu! 👋
+                </a>
+            </div>
+
             <form action="{{ route('jobs.index') }}" method="GET" class="search-box d-flex justify-content-center">
                 <input
                   type="text"
