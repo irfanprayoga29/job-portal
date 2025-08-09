@@ -18,6 +18,11 @@ Route::get('/simple-test', function () {
     return view('welcome', ['message' => 'Laravel is working! Current time: ' . now()]);
 });
 
+// Halo Kamu greeting route
+Route::get('/halo-kamu', function () {
+    return view('halo-kamu');
+});
+
 // Test route (keep for debugging)
 Route::get('/test', function () {
     try {
