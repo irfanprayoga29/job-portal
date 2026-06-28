@@ -21,10 +21,6 @@ return new class extends Migration
         DB::statement("UPDATE applications SET status = 'accepted' WHERE status = '1'");
         DB::statement("UPDATE applications SET status = 'pending' WHERE status = '0'");
         
-        // Finally, change to enum
-        Schema::table('applications', function (Blueprint $table) {
-            $table->enum('status', ['pending', 'accepted', 'declined'])->default('pending')->change();
-        });
     }
 
     /**
